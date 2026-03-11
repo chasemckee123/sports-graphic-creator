@@ -1,0 +1,22 @@
+packages:
+  "fabric": "Canvas editing library for generating and manipulating sports graphics"
+  "framer-motion": "For sleek, broadcast-style animations and panel transitions"
+  "lucide-react": "High-quality icons for the editor interface"
+  "clsx": "Utility for constructing className strings conditionally"
+  "tailwind-merge": "Utility function to efficiently merge Tailwind CSS classes"
+  "react-hook-form": "For robust form state management in the brand settings"
+  "@hookform/resolvers": "Zod integration for react-hook-form validation"
+  "zod": "Schema validation for forms"
+
+images:
+  - path: "artifacts/sports-graphic-creator/public/images/default-logo.png"
+    description: "A fierce, modern esports or athletic team logo featuring a stylized geometric animal head (like a panther or wolf) in neon green and dark grey, transparent background"
+    aspect_ratio: "1:1"
+  - path: "artifacts/sports-graphic-creator/public/images/player-placeholder.png"
+    description: "A silhouette of an athlete in an action pose (e.g. running or jumping), filled with a dark grey textured pattern, transparent background"
+    aspect_ratio: "3:4"
+
+notes:
+  - "Assuming fabric.js is v6. Using standard ES6 imports `import * as fabric from 'fabric'`."
+  - "Using provided @workspace/api-client-react hooks for all API interactions."
+  - "Canvas internal resolution is fixed to 1080x1080 (standard social square) for consistency, scaled via CSS to fit the viewport."

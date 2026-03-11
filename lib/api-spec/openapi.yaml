@@ -1,15 +1,18 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Sports Graphic Creator API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: brand
+    description: Brand configuration
+  - name: templates
+    description: Graphic templates
 paths:
   /healthz:
     get:
@@ -24,6 +27,97 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /brand:
+    get:
+      operationId: getBrand
+      tags: [brand]
+      summary: Get brand configuration
+      responses:
+        "200":
+          description: Brand config
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BrandConfig"
+    put:
+      operationId: saveBrand
+      tags: [brand]
+      summary: Save brand configuration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BrandConfig"
+      responses:
+        "200":
+          description: Saved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BrandConfig"
+  /templates:
+    get:
+      operationId: getTemplates
+      tags: [templates]
+      summary: Get all templates
+      responses:
+        "200":
+          description: Templates list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Template"
+    post:
+      operationId: createTemplate
+      tags: [templates]
+      summary: Create or save a template
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TemplateInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Template"
+  /templates/{id}:
+    get:
+      operationId: getTemplate
+      tags: [templates]
+      summary: Get a template by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Template
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Template"
+    delete:
+      operationId: deleteTemplate
+      tags: [templates]
+      summary: Delete a template
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
 components:
   schemas:
     HealthStatus:
@@ -33,4 +127,64 @@ components:
           type: string
       required:
         - status
-
+    BrandConfig:
+      type: object
+      properties:
+        primaryColor:
+          type: string
+          description: Hex color
+        secondaryColor:
+          type: string
+          description: Hex color
+        accentColor:
+          type: string
+          description: Hex color
+        logoUrl:
+          type: string
+          description: Logo image URL or base64
+        organizationName:
+          type: string
+      required:
+        - primaryColor
+        - secondaryColor
+        - accentColor
+        - organizationName
+    Template:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        category:
+          type: string
+        canvasJson:
+          type: string
+          description: Fabric.js canvas JSON
+        thumbnail:
+          type: string
+          description: Base64 thumbnail
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - category
+        - canvasJson
+        - createdAt
+    TemplateInput:
+      type: object
+      properties:
+        name:
+          type: string
+        category:
+          type: string
+        canvasJson:
+          type: string
+        thumbnail:
+          type: string
+      required:
+        - name
+        - category
+        - canvasJson

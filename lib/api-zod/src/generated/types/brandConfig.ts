@@ -5,9 +5,6 @@
  * Sports Graphic Creator API
  * OpenAPI spec version: 0.1.0
  */
-export interface HealthStatus {
-  status: string;
-}
 
 export interface BrandConfig {
   /** Hex color */
@@ -19,22 +16,4 @@ export interface BrandConfig {
   /** Logo image URL or base64 */
   logoUrl?: string;
   organizationName: string;
-}
-
-export interface Template {
-  id: number;
-  name: string;
-  category: string;
-  /** Fabric.js canvas JSON */
-  canvasJson: string;
-  /** Base64 thumbnail */
-  thumbnail?: string;
-  createdAt: string;
-}
-
-export interface TemplateInput {
-  name: string;
-  category: string;
-  canvasJson: string;
-  thumbnail?: string;
 }
