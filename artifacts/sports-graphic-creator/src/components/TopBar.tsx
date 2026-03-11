@@ -47,9 +47,10 @@ export function TopBar({ onExport, onAutoBrand, onSwitchStyle, zoom, setZoom, on
     try {
       const result = await onAutoBrand();
       if (result.success) {
+        const b = result.brand;
         toast({
           title: 'Auto-Brand Applied',
-          description: `Applied ${result.brand.organizationName} brand colors to all layers.`,
+          description: `Applied ${b.organizationName} colors: ${b.primaryColor}, ${b.secondaryColor}, ${b.accentColor}`,
         });
       }
     } finally {
@@ -59,9 +60,16 @@ export function TopBar({ onExport, onAutoBrand, onSwitchStyle, zoom, setZoom, on
 
   const handleSwitchStyle = () => {
     const result = onSwitchStyle();
+    const b = result.brand;
+    const rotations = [
+      [b.primaryColor, b.secondaryColor, b.accentColor],
+      [b.secondaryColor, b.accentColor, b.primaryColor],
+      [b.accentColor, b.primaryColor, b.secondaryColor],
+    ];
+    const active = rotations[result.rotation];
     toast({
       title: `Style: ${styleLabels[result.rotation]}`,
-      description: 'Color assignments rotated across all branded layers.',
+      description: `Colors: ${active[0]}, ${active[1]}, ${active[2]}`,
     });
   };
 

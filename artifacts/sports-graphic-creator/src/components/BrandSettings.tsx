@@ -97,10 +97,17 @@ function BrandPreviewBar({ primary, secondary, accent }: { primary: string; seco
   );
 }
 
+function normalizeHex(hex: string): string {
+  const h = hex.replace('#', '');
+  if (h.length === 3) return '#' + h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+  return '#' + h.slice(0, 6);
+}
+
 function getContrastText(hex: string): string {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
+  const norm = normalizeHex(hex);
+  const r = parseInt(norm.slice(1, 3), 16);
+  const g = parseInt(norm.slice(3, 5), 16);
+  const b = parseInt(norm.slice(5, 7), 16);
   const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
   return luminance > 0.5 ? '#000000' : '#ffffff';
 }
