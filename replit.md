@@ -95,11 +95,12 @@ Generated React Query hooks and fetch client from the OpenAPI spec (e.g. `useHea
 
 React + Vite sports graphic design tool with Fabric.js canvas for creating social media graphics.
 
-- **Templates**: 14+ templates across 6 categories (Game Day, Scores & Results, Player Features, Schedule & Events, Announcements, Blank) with a full-screen `TemplateBrowser.tsx` modal.
+- **Templates**: 15 templates across 6 categories (Game Day, Scores & Results, Player Features, Schedule & Events, Announcements, Blank) with a full-screen `TemplateBrowser.tsx` modal.
 - **Canvas Formats**: Multi-format support (Instagram Post/Story, Twitter/X, Facebook Cover, Custom) with proportional scaling of all objects and `FormatSelector.tsx` component.
 - **Image Editing**: Floating toolbar "Add Image" button, client-side background removal using `@imgly/background-removal`, and real-time photo filters (Brightness, Contrast, Saturation, Grayscale).
 - **Auto-Brand**: Role-based layer system (primary, secondary, accent, text, logo, background) for consistent branding across templates.
 - **Export**: Canvas export with format-specific naming and dimensions.
+- **Fabric.js v7**: Uses fabric.js v7.2.0 with Promise-based `Image.fromURL`, v7 z-order methods (`bringObjectForward`, etc.), and explicit `width` on all Textbox instances (required in v7 to prevent text wrapping into narrow columns).
 
 Key files:
 - `src/hooks/use-editor.ts` — Core canvas state, actions, format switching, and object scaling logic.

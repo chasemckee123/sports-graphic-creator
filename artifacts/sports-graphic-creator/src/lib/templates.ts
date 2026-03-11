@@ -94,14 +94,14 @@ export const applyTemplate = async (
 
       const title = new fabric.Textbox('GAME DAY', {
         fontFamily: 'Teko', fontSize: 200 * Math.min(sx, sy), fill: '#ffffff',
-        left: 50 * sx, top: 50 * sy, fontWeight: 'bold', fontStyle: 'italic',
+        width: 980 * sx, left: 50 * sx, top: 50 * sy, fontWeight: 'bold', fontStyle: 'italic',
         shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.5)', blur: 10, offsetX: 5, offsetY: 5 })
       });
       addObj(title, { name: 'Main Title', role: 'text' });
 
       const subtitle = new fabric.Textbox('FRIDAY NIGHT LIGHTS', {
         fontFamily: 'Inter', fontSize: 40 * Math.min(sx, sy), fill: defaultColors.accent,
-        left: 55 * sx, top: 250 * sy, fontWeight: 'bold', charSpacing: 100
+        width: 970 * sx, left: 55 * sx, top: 250 * sy, fontWeight: 'bold', charSpacing: 100
       });
       addObj(subtitle, { name: 'Subtitle', role: 'accent' });
 
@@ -113,7 +113,8 @@ export const applyTemplate = async (
 
       const vsText = new fabric.Textbox('HOME TEAM   VS   AWAY TEAM', {
         fontFamily: 'Teko', fontSize: 80 * Math.min(sx, sy), fill: '#ffffff',
-        left: 540 * sx, top: 925 * sy, originX: 'center', originY: 'center'
+        width: 800 * sx, left: 540 * sx, top: 925 * sy, originX: 'center', originY: 'center',
+        textAlign: 'center'
       });
       addObj(vsText, { name: 'Matchup Text', role: 'text' });
       break;
@@ -141,26 +142,28 @@ export const applyTemplate = async (
 
       const vsLabel = new fabric.Textbox('VS', {
         fontFamily: 'Teko', fontSize: 70, fill: '#111827',
-        left: 540, top: 540, originX: 'center', originY: 'center',
-        fontWeight: 'bold'
+        width: 120, left: 540, top: 540, originX: 'center', originY: 'center',
+        fontWeight: 'bold', textAlign: 'center'
       });
       addObj(vsLabel, { name: 'VS Text', role: 'text' });
 
       const rivalryTitle = new fabric.Textbox('RIVALRY\nWEEK', {
         fontFamily: 'Teko', fontSize: 160, fill: '#ffffff',
-        left: 50, top: 80, fontWeight: 'bold', lineHeight: 0.85
+        width: 500, left: 50, top: 80, fontWeight: 'bold', lineHeight: 0.85
       });
       addObj(rivalryTitle, { name: 'Title', role: 'text' });
 
       const team1 = new fabric.Textbox('HOME', {
         fontFamily: 'Teko', fontSize: 100, fill: '#ffffff',
-        left: 200, top: 850, originX: 'center', fontWeight: 'bold'
+        width: 400, left: 200, top: 850, originX: 'center', fontWeight: 'bold',
+        textAlign: 'center'
       });
       addObj(team1, { name: 'Home Team', role: 'text' });
 
       const team2 = new fabric.Textbox('AWAY', {
         fontFamily: 'Teko', fontSize: 100, fill: '#ffffff',
-        left: 850, top: 850, originX: 'center', fontWeight: 'bold'
+        width: 400, left: 850, top: 850, originX: 'center', fontWeight: 'bold',
+        textAlign: 'center'
       });
       addObj(team2, { name: 'Away Team', role: 'text' });
 
@@ -171,8 +174,8 @@ export const applyTemplate = async (
 
       const dateText = new fabric.Textbox('FRIDAY • 7:00 PM • HOME STADIUM', {
         fontFamily: 'Inter', fontSize: 30, fill: '#111827',
-        left: 540, top: 1040, originX: 'center', originY: 'center',
-        fontWeight: 'bold', charSpacing: 80
+        width: 1000, left: 540, top: 1040, originX: 'center', originY: 'center',
+        fontWeight: 'bold', charSpacing: 80, textAlign: 'center'
       });
       addObj(dateText, { name: 'Date Info', role: 'text' });
       break;
@@ -195,15 +198,15 @@ export const applyTemplate = async (
 
       const confTitle = new fabric.Textbox('CONFERENCE\nTOURNAMENT', {
         fontFamily: 'Teko', fontSize: 120, fill: '#ffffff',
-        left: 540, top: 440, originX: 'center', originY: 'center',
+        width: 700, left: 540, top: 440, originX: 'center', originY: 'center',
         fontWeight: 'bold', textAlign: 'center', lineHeight: 0.85
       });
       addObj(confTitle, { name: 'Title', role: 'text' });
 
       const yearText = new fabric.Textbox('2026', {
         fontFamily: 'Teko', fontSize: 300, fill: '#fbbf24', opacity: 0.15,
-        left: 540, top: 200, originX: 'center', originY: 'center',
-        fontWeight: 'bold'
+        width: 600, left: 540, top: 200, originX: 'center', originY: 'center',
+        fontWeight: 'bold', textAlign: 'center'
       });
       addObj(yearText, { name: 'Year Watermark', role: 'accent' });
 
@@ -233,25 +236,29 @@ export const applyTemplate = async (
 
       const slot1Text = new fabric.Textbox('TEAM A', {
         fontFamily: 'Inter', fontSize: 24, fill: '#ffffff',
-        left: 250, top: 680, originX: 'center', originY: 'center', fontWeight: 'bold'
+        width: 260, left: 250, top: 680, originX: 'center', originY: 'center', fontWeight: 'bold',
+        textAlign: 'center'
       });
       addObj(slot1Text, { name: 'Slot 1 Text', role: 'text' });
 
       const slot2Text = new fabric.Textbox('TEAM B', {
         fontFamily: 'Inter', fontSize: 24, fill: '#ffffff',
-        left: 250, top: 760, originX: 'center', originY: 'center', fontWeight: 'bold'
+        width: 260, left: 250, top: 760, originX: 'center', originY: 'center', fontWeight: 'bold',
+        textAlign: 'center'
       });
       addObj(slot2Text, { name: 'Slot 2 Text', role: 'text' });
 
       const slot3Text = new fabric.Textbox('TEAM C', {
         fontFamily: 'Inter', fontSize: 24, fill: '#ffffff',
-        left: 830, top: 680, originX: 'center', originY: 'center', fontWeight: 'bold'
+        width: 260, left: 830, top: 680, originX: 'center', originY: 'center', fontWeight: 'bold',
+        textAlign: 'center'
       });
       addObj(slot3Text, { name: 'Slot 3 Text', role: 'text' });
 
       const slot4Text = new fabric.Textbox('TEAM D', {
         fontFamily: 'Inter', fontSize: 24, fill: '#ffffff',
-        left: 830, top: 760, originX: 'center', originY: 'center', fontWeight: 'bold'
+        width: 260, left: 830, top: 760, originX: 'center', originY: 'center', fontWeight: 'bold',
+        textAlign: 'center'
       });
       addObj(slot4Text, { name: 'Slot 4 Text', role: 'text' });
 
@@ -263,7 +270,8 @@ export const applyTemplate = async (
 
       const finalText = new fabric.Textbox('CHAMPIONSHIP', {
         fontFamily: 'Teko', fontSize: 40, fill: '#0f172a',
-        left: 540, top: 880, originX: 'center', originY: 'center', fontWeight: 'bold'
+        width: 350, left: 540, top: 880, originX: 'center', originY: 'center', fontWeight: 'bold',
+        textAlign: 'center'
       });
       addObj(finalText, { name: 'Final Label', role: 'text' });
       break;
@@ -278,25 +286,29 @@ export const applyTemplate = async (
 
       const finalScoreLabel = new fabric.Textbox('FINAL SCORE', {
         fontFamily: 'Inter', fontSize: 40 * Math.min(sx, sy), fill: defaultColors.accent,
-        left: dims.width / 2, top: 300 * sy, originX: 'center', fontWeight: 'bold', charSpacing: 200
+        width: 600 * sx, left: dims.width / 2, top: 300 * sy, originX: 'center', fontWeight: 'bold',
+        charSpacing: 200, textAlign: 'center'
       });
       addObj(finalScoreLabel, { name: 'Label', role: 'accent' });
 
       const team1Score = new fabric.Textbox('42', {
         fontFamily: 'Teko', fontSize: 250 * Math.min(sx, sy), fill: '#ffffff',
-        left: dims.width * 0.25, top: 540 * sy, originX: 'center', originY: 'center', fontWeight: 'bold'
+        width: 300 * sx, left: dims.width * 0.25, top: 540 * sy, originX: 'center', originY: 'center',
+        fontWeight: 'bold', textAlign: 'center'
       });
       addObj(team1Score, { name: 'Home Score', role: 'text' });
 
       const team2Score = new fabric.Textbox('24', {
         fontFamily: 'Teko', fontSize: 250 * Math.min(sx, sy), fill: '#ffffff',
-        left: dims.width * 0.75, top: 540 * sy, originX: 'center', originY: 'center', fontWeight: 'bold'
+        width: 300 * sx, left: dims.width * 0.75, top: 540 * sy, originX: 'center', originY: 'center',
+        fontWeight: 'bold', textAlign: 'center'
       });
       addObj(team2Score, { name: 'Away Score', role: 'text' });
       
       const dash = new fabric.Textbox('-', {
         fontFamily: 'Teko', fontSize: 200 * Math.min(sx, sy), fill: defaultColors.accent,
-        left: dims.width / 2, top: 520 * sy, originX: 'center', originY: 'center', fontWeight: 'bold'
+        width: 100 * sx, left: dims.width / 2, top: 520 * sy, originX: 'center', originY: 'center',
+        fontWeight: 'bold', textAlign: 'center'
       });
       addObj(dash, { name: 'Divider', role: 'accent' });
       break;
@@ -313,14 +325,15 @@ export const applyTemplate = async (
 
       const recapTitle = new fabric.Textbox('WEEKLY RECAP', {
         fontFamily: 'Teko', fontSize: 140, fill: '#ffffff',
-        left: 540, top: 100, originX: 'center', originY: 'center',
-        fontWeight: 'bold'
+        width: 900, left: 540, top: 100, originX: 'center', originY: 'center',
+        fontWeight: 'bold', textAlign: 'center'
       });
       addObj(recapTitle, { name: 'Title', role: 'text' });
 
       const weekLabel = new fabric.Textbox('WEEK 8 RESULTS', {
         fontFamily: 'Inter', fontSize: 28, fill: '#f0fdf4',
-        left: 540, top: 240, originX: 'center', fontWeight: 'bold', charSpacing: 150
+        width: 600, left: 540, top: 240, originX: 'center', fontWeight: 'bold',
+        charSpacing: 150, textAlign: 'center'
       });
       addObj(weekLabel, { name: 'Week Label', role: 'accent' });
 
@@ -339,13 +352,14 @@ export const applyTemplate = async (
 
         const teamText = new fabric.Textbox(row.teams, {
           fontFamily: 'Inter', fontSize: 30, fill: '#ffffff',
-          left: 120, top: row.y + 35, fontWeight: 'bold'
+          width: 600, left: 120, top: row.y + 35, fontWeight: 'bold'
         });
         addObj(teamText, { name: `Game ${i + 1} Teams`, role: 'text' });
 
         const scoreText = new fabric.Textbox(row.score, {
           fontFamily: 'Teko', fontSize: 45, fill: row.score.startsWith('W') ? '#4ade80' : '#f87171',
-          left: 870, top: row.y + 50, originX: 'center', originY: 'center', fontWeight: 'bold'
+          width: 200, left: 870, top: row.y + 50, originX: 'center', originY: 'center',
+          fontWeight: 'bold', textAlign: 'center'
         });
         addObj(scoreText, { name: `Game ${i + 1} Score`, role: 'accent' });
       });
@@ -358,7 +372,8 @@ export const applyTemplate = async (
 
       const recordText = new fabric.Textbox('SEASON: 6-2', {
         fontFamily: 'Teko', fontSize: 60, fill: '#ffffff',
-        left: 540, top: 830, originX: 'center', originY: 'center', fontWeight: 'bold'
+        width: 380, left: 540, top: 830, originX: 'center', originY: 'center',
+        fontWeight: 'bold', textAlign: 'center'
       });
       addObj(recordText, { name: 'Season Record', role: 'text' });
       break;
@@ -385,14 +400,15 @@ export const applyTemplate = async (
 
       const champLabel = new fabric.Textbox('CHAMPIONS', {
         fontFamily: 'Teko', fontSize: 180, fill: '#d97706',
-        left: 540, top: 180, originX: 'center', originY: 'center',
-        fontWeight: 'bold'
+        width: 900, left: 540, top: 180, originX: 'center', originY: 'center',
+        fontWeight: 'bold', textAlign: 'center'
       });
       addObj(champLabel, { name: 'Champions Title', role: 'accent' });
 
       const yearWatermark = new fabric.Textbox('2026', {
         fontFamily: 'Teko', fontSize: 400, fill: '#ffffff', opacity: 0.05,
-        left: 540, top: 540, originX: 'center', originY: 'center', fontWeight: 'bold'
+        width: 800, left: 540, top: 540, originX: 'center', originY: 'center',
+        fontWeight: 'bold', textAlign: 'center'
       });
       addObj(yearWatermark, { name: 'Year Watermark', role: 'text' });
 
@@ -403,26 +419,29 @@ export const applyTemplate = async (
       addObj(trophyBg, { name: 'Trophy Circle', role: 'primary' });
 
       const trophyText = new fabric.Textbox('🏆', {
-        fontSize: 180,
-        left: 540, top: 480, originX: 'center', originY: 'center'
+        fontSize: 180, width: 200,
+        left: 540, top: 480, originX: 'center', originY: 'center', textAlign: 'center'
       });
       addObj(trophyText, { name: 'Trophy Icon', role: 'none' });
 
       const teamNameChamp = new fabric.Textbox('TEAM NAME', {
         fontFamily: 'Teko', fontSize: 120, fill: '#ffffff',
-        left: 540, top: 700, originX: 'center', originY: 'center', fontWeight: 'bold'
+        width: 800, left: 540, top: 700, originX: 'center', originY: 'center',
+        fontWeight: 'bold', textAlign: 'center'
       });
       addObj(teamNameChamp, { name: 'Team Name', role: 'text' });
 
       const confLabel = new fabric.Textbox('CONFERENCE CHAMPIONS', {
         fontFamily: 'Inter', fontSize: 30, fill: '#fef3c7',
-        left: 540, top: 790, originX: 'center', fontWeight: 'bold', charSpacing: 200
+        width: 900, left: 540, top: 790, originX: 'center', fontWeight: 'bold',
+        charSpacing: 200, textAlign: 'center'
       });
       addObj(confLabel, { name: 'Conference Label', role: 'accent' });
 
       const recordChamp = new fabric.Textbox('UNDEFEATED • 12-0', {
         fontFamily: 'Inter', fontSize: 28, fill: '#d97706',
-        left: 540, top: 900, originX: 'center', fontWeight: 'bold', charSpacing: 100
+        width: 600, left: 540, top: 900, originX: 'center', fontWeight: 'bold',
+        charSpacing: 100, textAlign: 'center'
       });
       addObj(recordChamp, { name: 'Record', role: 'accent' });
       break;
@@ -439,18 +458,19 @@ export const applyTemplate = async (
       
       const playerName = new fabric.Textbox('JOHN\nDOE', {
         fontFamily: 'Teko', fontSize: 180 * Math.min(sx, sy), fill: '#ffffff',
-        left: 50 * sx, top: 50 * sy, fontWeight: 'bold', lineHeight: 0.8
+        width: 600 * sx, left: 50 * sx, top: 50 * sy, fontWeight: 'bold', lineHeight: 0.8
       });
       addObj(playerName, { name: 'Player Name', role: 'text' });
       
       const number = new fabric.Textbox('#10', {
         fontFamily: 'Teko', fontSize: 400 * Math.min(sx, sy), fill: defaultColors.secondary, opacity: 0.5,
-        left: 20 * sx, top: 600 * sy, fontWeight: 'bold'
+        width: 500 * sx, left: 20 * sx, top: 600 * sy, fontWeight: 'bold'
       });
       addObj(number, { name: 'Jersey Number', role: 'secondary' });
       
       const stat1 = new fabric.Textbox('POINTS\n24', {
-        fontFamily: 'Teko', fontSize: 80 * Math.min(sx, sy), fill: '#ffffff', left: 720 * sx, top: 200 * sy, textAlign: 'center'
+        fontFamily: 'Teko', fontSize: 80 * Math.min(sx, sy), fill: '#ffffff',
+        width: 350 * sx, left: 720 * sx, top: 200 * sy, textAlign: 'center'
       });
       addObj(stat1, { name: 'Stat 1', role: 'text' });
       break;
@@ -503,13 +523,15 @@ export const applyTemplate = async (
 
       const seniorLabel = new fabric.Textbox('SENIOR NIGHT', {
         fontFamily: 'Teko', fontSize: 80, fill: '#ffffff',
-        left: 540, top: 120, originX: 'center', originY: 'center', fontWeight: 'bold'
+        width: 580, left: 540, top: 120, originX: 'center', originY: 'center',
+        fontWeight: 'bold', textAlign: 'center'
       });
       addObj(seniorLabel, { name: 'Senior Label', role: 'text' });
 
       const classOf = new fabric.Textbox('CLASS OF 2026', {
         fontFamily: 'Inter', fontSize: 30, fill: '#fde68a',
-        left: 540, top: 200, originX: 'center', fontWeight: 'bold', charSpacing: 200
+        width: 600, left: 540, top: 200, originX: 'center', fontWeight: 'bold',
+        charSpacing: 200, textAlign: 'center'
       });
       addObj(classOf, { name: 'Class Of', role: 'accent' });
 
@@ -521,26 +543,29 @@ export const applyTemplate = async (
 
       const photoLabel = new fabric.Textbox('PLAYER\nPHOTO', {
         fontFamily: 'Inter', fontSize: 40, fill: '#78716c',
-        left: 540, top: 520, originX: 'center', originY: 'center',
+        width: 300, left: 540, top: 520, originX: 'center', originY: 'center',
         textAlign: 'center'
       });
       addObj(photoLabel, { name: 'Photo Label', role: 'none' });
 
       const seniorName = new fabric.Textbox('PLAYER NAME', {
         fontFamily: 'Teko', fontSize: 100, fill: '#ffffff',
-        left: 540, top: 820, originX: 'center', fontWeight: 'bold'
+        width: 800, left: 540, top: 820, originX: 'center', fontWeight: 'bold',
+        textAlign: 'center'
       });
       addObj(seniorName, { name: 'Player Name', role: 'text' });
 
       const seniorInfo = new fabric.Textbox('#00 • POSITION • 4 YEARS', {
         fontFamily: 'Inter', fontSize: 24, fill: '#fde68a',
-        left: 540, top: 920, originX: 'center', fontWeight: 'bold', charSpacing: 80
+        width: 800, left: 540, top: 920, originX: 'center', fontWeight: 'bold',
+        charSpacing: 80, textAlign: 'center'
       });
       addObj(seniorInfo, { name: 'Player Info', role: 'accent' });
 
       const thankYou = new fabric.Textbox('THANK YOU FOR YOUR DEDICATION', {
         fontFamily: 'Inter', fontSize: 20, fill: '#a8a29e',
-        left: 540, top: 980, originX: 'center', charSpacing: 100
+        width: 900, left: 540, top: 980, originX: 'center',
+        charSpacing: 100, textAlign: 'center'
       });
       addObj(thankYou, { name: 'Thank You', role: 'text' });
       break;
@@ -557,7 +582,8 @@ export const applyTemplate = async (
 
       const lbTitle = new fabric.Textbox('STAT LEADERS', {
         fontFamily: 'Teko', fontSize: 130, fill: '#ffffff',
-        left: 540, top: 90, originX: 'center', originY: 'center', fontWeight: 'bold'
+        width: 900, left: 540, top: 90, originX: 'center', originY: 'center',
+        fontWeight: 'bold', textAlign: 'center'
       });
       addObj(lbTitle, { name: 'Title', role: 'text' });
 
@@ -578,19 +604,20 @@ export const applyTemplate = async (
 
         const rankText = new fabric.Textbox(p.rank, {
           fontFamily: 'Teko', fontSize: 60, fill: '#0ea5e9',
-          left: 130, top: p.y + 50, originY: 'center', fontWeight: 'bold'
+          width: 60, left: 130, top: p.y + 50, originY: 'center', fontWeight: 'bold'
         });
         addObj(rankText, { name: `Rank ${i + 1}`, role: 'accent' });
 
         const nameText = new fabric.Textbox(p.name, {
           fontFamily: 'Inter', fontSize: 32, fill: '#ffffff',
-          left: 210, top: p.y + 35, fontWeight: 'bold'
+          width: 500, left: 210, top: p.y + 35, fontWeight: 'bold'
         });
         addObj(nameText, { name: `Player ${i + 1} Name`, role: 'text' });
 
         const statText = new fabric.Textbox(p.stat, {
           fontFamily: 'Teko', fontSize: 45, fill: '#e0f2fe',
-          left: 900, top: p.y + 50, originX: 'center', originY: 'center', fontWeight: 'bold'
+          width: 200, left: 900, top: p.y + 50, originX: 'center', originY: 'center',
+          fontWeight: 'bold', textAlign: 'center'
         });
         addObj(statText, { name: `Player ${i + 1} Stat`, role: 'text' });
       });
@@ -608,13 +635,13 @@ export const applyTemplate = async (
 
       const schedTitle = new fabric.Textbox('2026\nSEASON', {
         fontFamily: 'Teko', fontSize: 120, fill: '#ffffff',
-        left: 140, top: 60, fontWeight: 'bold', lineHeight: 0.85
+        width: 500, left: 140, top: 60, fontWeight: 'bold', lineHeight: 0.85
       });
       addObj(schedTitle, { name: 'Title', role: 'text' });
 
       const schedLabel = new fabric.Textbox('SCHEDULE', {
         fontFamily: 'Inter', fontSize: 24, fill: '#dbeafe',
-        left: 145, top: 280, fontWeight: 'bold', charSpacing: 300
+        width: 500, left: 145, top: 280, fontWeight: 'bold', charSpacing: 300
       });
       addObj(schedLabel, { name: 'Schedule Label', role: 'accent' });
 
@@ -637,19 +664,19 @@ export const applyTemplate = async (
 
         const dateText = new fabric.Textbox(g.date, {
           fontFamily: 'Inter', fontSize: 22, fill: '#dbeafe',
-          left: 170, top: y + 28, fontWeight: 'bold'
+          width: 200, left: 170, top: y + 28, fontWeight: 'bold'
         });
         addObj(dateText, { name: `Game ${i + 1} Date`, role: 'accent' });
 
         const oppText = new fabric.Textbox(g.opp, {
           fontFamily: 'Teko', fontSize: 40, fill: '#ffffff',
-          left: 400, top: y + 40, originY: 'center', fontWeight: 'bold'
+          width: 400, left: 400, top: y + 40, originY: 'center', fontWeight: 'bold'
         });
         addObj(oppText, { name: `Game ${i + 1} Opponent`, role: 'text' });
 
         const locText = new fabric.Textbox(g.loc, {
           fontFamily: 'Inter', fontSize: 18, fill: g.loc === 'HOME' ? '#4ade80' : '#fbbf24',
-          left: 900, top: y + 28, fontWeight: 'bold'
+          width: 100, left: 900, top: y + 28, fontWeight: 'bold'
         });
         addObj(locText, { name: `Game ${i + 1} Location`, role: 'accent' });
       });
@@ -674,7 +701,7 @@ export const applyTemplate = async (
 
       const practiceTitle = new fabric.Textbox('PRACTICE\nUPDATE', {
         fontFamily: 'Teko', fontSize: 140, fill: '#ffffff',
-        left: 540, top: 250, originX: 'center', originY: 'center',
+        width: 700, left: 540, top: 250, originX: 'center', originY: 'center',
         fontWeight: 'bold', textAlign: 'center', lineHeight: 0.85
       });
       addObj(practiceTitle, { name: 'Title', role: 'text' });
@@ -687,7 +714,7 @@ export const applyTemplate = async (
 
       const infoBlock = new fabric.Textbox('DATE: TUESDAY, MARCH 10\nTIME: 3:30 PM - 5:30 PM\nLOCATION: MAIN FIELD', {
         fontFamily: 'Inter', fontSize: 28, fill: '#bbf7d0',
-        left: 540, top: 450, originX: 'center', fontWeight: 'bold',
+        width: 700, left: 540, top: 450, originX: 'center', fontWeight: 'bold',
         textAlign: 'center', lineHeight: 1.8
       });
       addObj(infoBlock, { name: 'Info Block', role: 'accent' });
@@ -700,14 +727,15 @@ export const applyTemplate = async (
 
       const noteText = new fabric.Textbox('BRING FULL GEAR\nFOCUS: DEFENSIVE DRILLS', {
         fontFamily: 'Teko', fontSize: 50, fill: '#ffffff',
-        left: 540, top: 700, originX: 'center', originY: 'center',
+        width: 680, left: 540, top: 700, originX: 'center', originY: 'center',
         fontWeight: 'bold', textAlign: 'center', lineHeight: 1.2
       });
       addObj(noteText, { name: 'Note Text', role: 'text' });
 
       const footer = new fabric.Textbox('BE ON TIME • BE PREPARED • BE GREAT', {
         fontFamily: 'Inter', fontSize: 18, fill: '#16a34a',
-        left: 540, top: 880, originX: 'center', fontWeight: 'bold', charSpacing: 100
+        width: 800, left: 540, top: 880, originX: 'center', fontWeight: 'bold',
+        charSpacing: 100, textAlign: 'center'
       });
       addObj(footer, { name: 'Footer', role: 'accent' });
       break;
@@ -724,13 +752,15 @@ export const applyTemplate = async (
 
       const rosterTitle = new fabric.Textbox('ROSTER REVEAL', {
         fontFamily: 'Teko', fontSize: 130, fill: '#ffffff',
-        left: 540, top: 100, originX: 'center', originY: 'center', fontWeight: 'bold'
+        width: 900, left: 540, top: 100, originX: 'center', originY: 'center',
+        fontWeight: 'bold', textAlign: 'center'
       });
       addObj(rosterTitle, { name: 'Title', role: 'text' });
 
       const seasonLabel = new fabric.Textbox('2025-2026 SEASON', {
         fontFamily: 'Inter', fontSize: 24, fill: '#ede9fe',
-        left: 540, top: 240, originX: 'center', fontWeight: 'bold', charSpacing: 200
+        width: 700, left: 540, top: 240, originX: 'center', fontWeight: 'bold',
+        charSpacing: 200, textAlign: 'center'
       });
       addObj(seasonLabel, { name: 'Season Label', role: 'accent' });
 
@@ -753,7 +783,7 @@ export const applyTemplate = async (
 
           const playerText = new fabric.Textbox(player, {
             fontFamily: 'Teko', fontSize: 36, fill: '#ffffff',
-            left: x + 130, top: y + 90, originX: 'center', originY: 'center',
+            width: 240, left: x + 130, top: y + 90, originX: 'center', originY: 'center',
             fontWeight: 'bold', textAlign: 'center'
           });
           addObj(playerText, { name: `Player ${ri * 3 + ci + 1}`, role: 'text' });
@@ -783,7 +813,7 @@ export const applyTemplate = async (
 
       const recruitTitle = new fabric.Textbox('JOIN\nTHE\nTEAM', {
         fontFamily: 'Teko', fontSize: 200, fill: '#ffffff',
-        left: 80, top: 300, fontWeight: 'bold', lineHeight: 0.8
+        width: 500, left: 80, top: 300, fontWeight: 'bold', lineHeight: 0.8
       });
       addObj(recruitTitle, { name: 'Title', role: 'text' });
 
@@ -795,19 +825,22 @@ export const applyTemplate = async (
 
       const ctaText = new fabric.Textbox('TRYOUTS: MAR 15', {
         fontFamily: 'Teko', fontSize: 45, fill: '#1c1917',
-        left: 810, top: 740, originX: 'center', originY: 'center', fontWeight: 'bold'
+        width: 420, left: 810, top: 740, originX: 'center', originY: 'center',
+        fontWeight: 'bold', textAlign: 'center'
       });
       addObj(ctaText, { name: 'CTA Text', role: 'text' });
 
       const contactInfo = new fabric.Textbox('CONTACT: COACH@SCHOOL.EDU', {
         fontFamily: 'Inter', fontSize: 22, fill: '#fff7ed',
-        left: 810, top: 810, originX: 'center', fontWeight: 'bold', charSpacing: 60
+        width: 500, left: 810, top: 810, originX: 'center', fontWeight: 'bold',
+        charSpacing: 60, textAlign: 'center'
       });
       addObj(contactInfo, { name: 'Contact', role: 'accent' });
 
       const tagline = new fabric.Textbox('BE PART OF SOMETHING GREATER', {
         fontFamily: 'Inter', fontSize: 18, fill: '#ea580c',
-        left: 540, top: 1030, originX: 'center', fontWeight: 'bold', charSpacing: 150
+        width: 800, left: 540, top: 1030, originX: 'center', fontWeight: 'bold',
+        charSpacing: 150, textAlign: 'center'
       });
       addObj(tagline, { name: 'Tagline', role: 'accent' });
       break;
@@ -827,7 +860,7 @@ export const applyTemplate = async (
   }
 
   const isLandscape = templateName === 'Branded Landscape';
-  const logoCenterX = isLandscape ? dims.width / 2 : dims.width / 2;
+  const logoCenterX = dims.width / 2;
   const logoCenterY = isLandscape ? dims.height / 2 : 100 * sy;
   const logoSize = isLandscape ? 400 : 200 * Math.min(sx, sy);
 
@@ -836,7 +869,6 @@ export const applyTemplate = async (
       width: 1920, height: 1080, left: 0, top: 0,
       fill: 'rgba(0,0,0,0)',
       selectable: false, evented: false,
-      globalCompositeOperation: 'multiply'
     });
     const patternCanvas = document.createElement('canvas');
     patternCanvas.width = 4;
@@ -866,8 +898,9 @@ export const applyTemplate = async (
     addLandscapeTexture();
   }
 
-  if (logoUrl) {
-    fabric.Image.fromURL(logoUrl, (img) => {
+  try {
+    if (logoUrl) {
+      const img = await fabric.Image.fromURL(logoUrl, { crossOrigin: 'anonymous' });
       if (isLandscape) {
         const placeholder = canvas.getObjects().find(
           (o) => (o as CustomFabricObject).name === 'Logo Placeholder'
@@ -882,21 +915,24 @@ export const applyTemplate = async (
           (o) => (o as CustomFabricObject).name === 'Texture Overlay'
         );
         if (texture) {
-          const topIndex = canvas.getObjects().length - 1;
-          canvas.moveTo(texture, topIndex);
+          canvas.bringObjectToFront(texture);
         }
       }
       canvas.renderAll();
-    }, { crossOrigin: 'anonymous' });
-  } else if (!isLandscape) {
-    fabric.Image.fromURL(`${import.meta.env.BASE_URL}images/default-logo.png`, (img) => {
-      if(img) {
+    } else if (!isLandscape) {
+      const img = await fabric.Image.fromURL(
+        `${import.meta.env.BASE_URL}images/default-logo.png`,
+        { crossOrigin: 'anonymous' }
+      );
+      if (img) {
         img.scaleToWidth(logoSize);
         img.set({ left: logoCenterX, top: logoCenterY, originX: 'center', originY: 'center' });
         addObj(img, { name: 'Team Logo', role: 'logo' });
         canvas.renderAll();
       }
-    });
+    }
+  } catch {
+    // Logo loading failed silently — template still works without logo
   }
 
   canvas.renderAll();

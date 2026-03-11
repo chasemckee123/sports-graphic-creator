@@ -142,10 +142,12 @@ export function useEditor() {
       fontFamily: 'Teko',
       fontSize: 100,
       fill: '#ffffff',
+      width: 500,
       left: canvasFormat.width / 2,
       top: canvasFormat.height / 2,
       originX: 'center',
       originY: 'center',
+      textAlign: 'center',
     });
     Object.assign(text, { id: crypto.randomUUID(), name: 'Text Layer', role: 'text' });
     canvas.add(text);
@@ -242,13 +244,10 @@ export function useEditor() {
 
       if (cObj.role === 'logo' && freshBrand.logoUrl) {
         try {
-          const newImg = await new Promise<fabric.Image | null>((resolve) => {
-            fabric.Image.fromURL(
-              freshBrand.logoUrl!,
-              (img) => resolve(img),
-              { crossOrigin: 'anonymous' }
-            );
-          });
+          const newImg = await fabric.Image.fromURL(
+            freshBrand.logoUrl!,
+            { crossOrigin: 'anonymous' }
+          );
           if (newImg) {
             newImg.set({
               left: obj.left,
@@ -327,10 +326,10 @@ export function useEditor() {
   const moveLayer = (obj: CustomFabricObject, direction: 'up' | 'down' | 'top' | 'bottom') => {
     if (!canvas) return;
     const fObj = obj as fabric.Object;
-    if (direction === 'up') canvas.bringForward(fObj);
-    if (direction === 'down') canvas.sendBackwards(fObj);
-    if (direction === 'top') canvas.bringToFront(fObj);
-    if (direction === 'bottom') canvas.sendToBack(fObj);
+    if (direction === 'up') canvas.bringObjectForward(fObj);
+    if (direction === 'down') canvas.sendObjectBackwards(fObj);
+    if (direction === 'top') canvas.bringObjectToFront(fObj);
+    if (direction === 'bottom') canvas.sendObjectToBack(fObj);
     canvas.renderAll();
     syncObjects(canvas);
   };
