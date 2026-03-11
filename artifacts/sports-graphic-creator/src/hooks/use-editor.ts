@@ -84,7 +84,11 @@ export function useEditor() {
     });
 
     setCanvas(c);
-    applyTemplate(c, 'Game Day', currentBrand.logoUrl);
+    applyTemplate(c, 'Game Day', currentBrand.logoUrl, undefined, undefined, {
+      primary: currentBrand.primaryColor,
+      secondary: currentBrand.secondaryColor,
+      accent: currentBrand.accentColor,
+    });
 
     return () => {
       c.dispose();
@@ -136,7 +140,11 @@ export function useEditor() {
     if (!canvas) return;
     const dims = templateDimensions[name] || { width: canvasFormat.width, height: canvasFormat.height };
     setCanvasFormat({ name: canvasFormat.name, width: dims.width, height: dims.height });
-    applyTemplate(canvas, name, currentBrand.logoUrl, dims.width, dims.height);
+    applyTemplate(canvas, name, currentBrand.logoUrl, dims.width, dims.height, {
+      primary: currentBrand.primaryColor,
+      secondary: currentBrand.secondaryColor,
+      accent: currentBrand.accentColor,
+    });
   };
 
   const addText = () => {

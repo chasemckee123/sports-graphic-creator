@@ -59,10 +59,13 @@ export const applyTemplate = async (
   templateName: string,
   logoUrl?: string,
   canvasWidth: number = 1080,
-  canvasHeight: number = 1080
+  canvasHeight: number = 1080,
+  brandColors?: { primary: string; secondary: string; accent: string }
 ) => {
   canvas.clear();
   canvas.backgroundColor = '#000000';
+
+  const colors = brandColors || defaultColors;
 
   const dims = templateDimensions[templateName] || { width: canvasWidth, height: canvasHeight };
   canvas.setDimensions(dims);
@@ -99,35 +102,35 @@ export const applyTemplate = async (
       const deepAngle = new fabric.Polygon([
         { x: 0, y: dims.height }, { x: dims.width, y: dims.height },
         { x: dims.width, y: 350 * sy }, { x: 0, y: 700 * sy }
-      ], { fill: defaultColors.primary, opacity: 0.35 });
+      ], { fill: colors.primary, opacity: 0.35 });
       addObj(deepAngle, { name: 'Deep Angle', role: 'primary' });
 
       const angle = new fabric.Polygon([
         { x: 0, y: dims.height }, { x: dims.width, y: dims.height },
         { x: dims.width, y: 440 * sy }, { x: 0, y: 780 * sy }
-      ], { fill: defaultColors.primary, opacity: 0.9 });
+      ], { fill: colors.primary, opacity: 0.9 });
       addObj(angle, { name: 'Primary Angle', role: 'primary' });
 
       const angle2 = new fabric.Polygon([
         { x: 0, y: dims.height }, { x: dims.width, y: dims.height },
         { x: dims.width, y: 540 * sy }, { x: 0, y: 880 * sy }
-      ], { fill: defaultColors.secondary, opacity: 0.85 });
+      ], { fill: colors.secondary, opacity: 0.85 });
       addObj(angle2, { name: 'Secondary Angle', role: 'secondary' });
 
       const accentStripe1 = new fabric.Polygon([
         { x: 0, y: 790 * sy }, { x: dims.width, y: 450 * sy },
         { x: dims.width, y: 458 * sy }, { x: 0, y: 798 * sy }
-      ], { fill: defaultColors.accent, opacity: 0.7 });
+      ], { fill: colors.accent, opacity: 0.7 });
       addObj(accentStripe1, { name: 'Accent Stripe 1', role: 'accent' });
 
       const accentStripe2 = new fabric.Polygon([
         { x: 0, y: 810 * sy }, { x: dims.width, y: 470 * sy },
         { x: dims.width, y: 475 * sy }, { x: 0, y: 815 * sy }
-      ], { fill: defaultColors.accent, opacity: 0.4 });
+      ], { fill: colors.accent, opacity: 0.4 });
       addObj(accentStripe2, { name: 'Accent Stripe 2', role: 'accent' });
 
       const topAccent = new fabric.Rect({
-        width: 6 * sx, height: 180 * sy, fill: defaultColors.accent,
+        width: 6 * sx, height: 180 * sy, fill: colors.accent,
         left: 50 * sx, top: 320 * sy
       });
       addObj(topAccent, { name: 'Side Accent', role: 'accent' });
@@ -140,7 +143,7 @@ export const applyTemplate = async (
       addObj(title, { name: 'Main Title', role: 'text' });
 
       const subtitle = new fabric.Textbox('FRIDAY NIGHT LIGHTS', {
-        fontFamily: 'Inter', fontSize: 36 * Math.min(sx, sy), fill: defaultColors.accent,
+        fontFamily: 'Inter', fontSize: 36 * Math.min(sx, sy), fill: colors.accent,
         width: 970 * sx, left: 75 * sx, top: 270 * sy, fontWeight: 'bold', charSpacing: 200
       });
       addObj(subtitle, { name: 'Subtitle', role: 'accent' });
@@ -148,13 +151,13 @@ export const applyTemplate = async (
       const matchupShape = new fabric.Polygon([
         { x: 100 * sx, y: 840 * sy }, { x: 980 * sx, y: 840 * sy },
         { x: 1020 * sx, y: 1000 * sy }, { x: 60 * sx, y: 1000 * sy }
-      ], { fill: defaultColors.secondary, opacity: 0.95 });
+      ], { fill: colors.secondary, opacity: 0.95 });
       addObj(matchupShape, { name: 'Matchup Box', role: 'secondary' });
 
       const matchupAccent = new fabric.Polygon([
         { x: 95 * sx, y: 838 * sy }, { x: 985 * sx, y: 838 * sy },
         { x: 988 * sx, y: 845 * sy }, { x: 92 * sx, y: 845 * sy }
-      ], { fill: defaultColors.accent });
+      ], { fill: colors.accent });
       addObj(matchupAccent, { name: 'Matchup Top Accent', role: 'accent' });
 
       const vsText = new fabric.Textbox('HOME TEAM   VS   AWAY TEAM', {
@@ -165,7 +168,7 @@ export const applyTemplate = async (
       addObj(vsText, { name: 'Matchup Text', role: 'text' });
 
       const bottomStripe = new fabric.Rect({
-        width: dims.width, height: 10 * sy, fill: defaultColors.accent,
+        width: dims.width, height: 10 * sy, fill: colors.accent,
         left: 0, top: dims.height - 10 * sy
       });
       addObj(bottomStripe, { name: 'Bottom Stripe', role: 'accent' });
@@ -441,36 +444,36 @@ export const applyTemplate = async (
       const topAccent = new fabric.Polygon([
         { x: 0, y: 0 }, { x: dims.width, y: 0 },
         { x: dims.width, y: 10 * sy }, { x: 0, y: 10 * sy }
-      ], { fill: defaultColors.accent });
+      ], { fill: colors.accent });
       addObj(topAccent, { name: 'Top Accent', role: 'accent' });
 
       const centerStripe = new fabric.Polygon([
         { x: 0, y: 360 * sy }, { x: dims.width, y: 320 * sy },
         { x: dims.width, y: 720 * sy }, { x: 0, y: 760 * sy }
-      ], { fill: defaultColors.primary, opacity: 0.95 });
+      ], { fill: colors.primary, opacity: 0.95 });
       addObj(centerStripe, { name: 'Center Stripe', role: 'primary' });
 
       const stripeTopEdge = new fabric.Polygon([
         { x: 0, y: 355 * sy }, { x: dims.width, y: 315 * sy },
         { x: dims.width, y: 322 * sy }, { x: 0, y: 362 * sy }
-      ], { fill: defaultColors.accent, opacity: 0.8 });
+      ], { fill: colors.accent, opacity: 0.8 });
       addObj(stripeTopEdge, { name: 'Stripe Top Edge', role: 'accent' });
 
       const stripeBotEdge = new fabric.Polygon([
         { x: 0, y: 758 * sy }, { x: dims.width, y: 718 * sy },
         { x: dims.width, y: 725 * sy }, { x: 0, y: 765 * sy }
-      ], { fill: defaultColors.accent, opacity: 0.5 });
+      ], { fill: colors.accent, opacity: 0.5 });
       addObj(stripeBotEdge, { name: 'Stripe Bottom Edge', role: 'accent' });
 
       const finalBadge = new fabric.Rect({
-        width: 220 * sx, height: 50 * sy, fill: defaultColors.accent,
+        width: 220 * sx, height: 50 * sy, fill: colors.accent,
         left: dims.width / 2, top: 240 * sy, originX: 'center', originY: 'center',
         rx: 4, ry: 4
       });
       addObj(finalBadge, { name: 'Final Badge', role: 'accent' });
 
       const finalScoreLabel = new fabric.Textbox('FINAL SCORE', {
-        fontFamily: 'Inter', fontSize: 28 * Math.min(sx, sy), fill: defaultColors.secondary,
+        fontFamily: 'Inter', fontSize: 28 * Math.min(sx, sy), fill: colors.secondary,
         width: 300 * sx, left: dims.width / 2, top: 240 * sy, originX: 'center', originY: 'center',
         fontWeight: 'bold', charSpacing: 200, textAlign: 'center'
       });
@@ -507,21 +510,21 @@ export const applyTemplate = async (
       addObj(team2Score, { name: 'Away Score', role: 'text' });
 
       const dividerCircle = new fabric.Circle({
-        radius: 40 * Math.min(sx, sy), fill: defaultColors.accent,
+        radius: 40 * Math.min(sx, sy), fill: colors.accent,
         left: dims.width / 2, top: 540 * sy, originX: 'center', originY: 'center',
         shadow: new fabric.Shadow({ color: 'rgba(250,204,21,0.4)', blur: 20 })
       });
       addObj(dividerCircle, { name: 'Divider Circle', role: 'accent' });
 
       const dash = new fabric.Textbox('VS', {
-        fontFamily: 'Teko', fontSize: 45 * Math.min(sx, sy), fill: defaultColors.secondary,
+        fontFamily: 'Teko', fontSize: 45 * Math.min(sx, sy), fill: colors.secondary,
         width: 80 * sx, left: dims.width / 2, top: 540 * sy, originX: 'center', originY: 'center',
         fontWeight: 'bold', textAlign: 'center'
       });
       addObj(dash, { name: 'Divider', role: 'text' });
 
       const bottomBar = new fabric.Rect({
-        width: dims.width, height: 100 * sy, fill: defaultColors.secondary,
+        width: dims.width, height: 100 * sy, fill: colors.secondary,
         left: 0, top: dims.height - 100 * sy
       });
       addObj(bottomBar, { name: 'Bottom Bar', role: 'secondary' });
@@ -813,19 +816,19 @@ export const applyTemplate = async (
       const diagStripe = new fabric.Polygon([
         { x: 200 * sx, y: 0 }, { x: 350 * sx, y: 0 },
         { x: 50 * sx, y: dims.height }, { x: -100 * sx, y: dims.height }
-      ], { fill: defaultColors.primary, opacity: 0.08 });
+      ], { fill: colors.primary, opacity: 0.08 });
       addObj(diagStripe, { name: 'Background Stripe', role: 'primary' });
 
       const statPanel = new fabric.Polygon([
         { x: 650 * sx, y: 0 }, { x: dims.width, y: 0 },
         { x: dims.width, y: dims.height }, { x: 720 * sx, y: dims.height }
-      ], { fill: defaultColors.primary });
+      ], { fill: colors.primary });
       addObj(statPanel, { name: 'Stat Panel', role: 'primary' });
 
       const panelEdge = new fabric.Polygon([
         { x: 645 * sx, y: 0 }, { x: 655 * sx, y: 0 },
         { x: 725 * sx, y: dims.height }, { x: 715 * sx, y: dims.height }
-      ], { fill: defaultColors.accent, opacity: 0.6 });
+      ], { fill: colors.accent, opacity: 0.6 });
       addObj(panelEdge, { name: 'Panel Edge', role: 'accent' });
 
       const nameBacking = new fabric.Polygon([
@@ -842,7 +845,7 @@ export const applyTemplate = async (
       addObj(playerName, { name: 'Player Name', role: 'text' });
 
       const posLabel = new fabric.Textbox('POINT GUARD', {
-        fontFamily: 'Inter', fontSize: 24 * Math.min(sx, sy), fill: defaultColors.accent,
+        fontFamily: 'Inter', fontSize: 24 * Math.min(sx, sy), fill: colors.accent,
         width: 400 * sx, left: 55 * sx, top: 380 * sy, fontWeight: 'bold', charSpacing: 200
       });
       addObj(posLabel, { name: 'Position', role: 'accent' });
@@ -867,7 +870,7 @@ export const applyTemplate = async (
         }), { name: `Stat ${i + 1} Divider`, role: 'none', locked: true });
 
         addObj(new fabric.Textbox(s.label, {
-          fontFamily: 'Inter', fontSize: 22 * Math.min(sx, sy), fill: defaultColors.accent,
+          fontFamily: 'Inter', fontSize: 22 * Math.min(sx, sy), fill: colors.accent,
           width: 280 * sx, left: 730 * sx, top: (s.y + 20) * sy,
           fontWeight: 'bold', charSpacing: 200, textAlign: 'center'
         }), { name: `Stat ${i + 1} Label`, role: 'accent' });
@@ -880,7 +883,7 @@ export const applyTemplate = async (
       });
 
       addObj(new fabric.Rect({
-        width: dims.width, height: 8 * sy, fill: defaultColors.accent,
+        width: dims.width, height: 8 * sy, fill: colors.accent,
         left: 0, top: dims.height - 8 * sy
       }), { name: 'Bottom Accent', role: 'accent' });
       break;
@@ -1614,6 +1617,15 @@ export const applyTemplate = async (
       addObj(defaultBg, { name: 'Background', role: 'background', locked: true });
       break;
     }
+  }
+
+  if (brandColors) {
+    canvas.getObjects().forEach((obj) => {
+      const cObj = obj as unknown as CustomFabricObject;
+      if (cObj.role === 'primary') obj.set('fill', brandColors.primary);
+      if (cObj.role === 'secondary') obj.set('fill', brandColors.secondary);
+      if (cObj.role === 'accent') obj.set('fill', brandColors.accent);
+    });
   }
 
   const isLandscape = templateName === 'Branded Landscape';

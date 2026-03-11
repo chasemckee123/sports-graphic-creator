@@ -134,6 +134,11 @@ export function TopBar({ onExport, onAutoBrand, onSwitchStyle, zoom, setZoom, on
         open={templateBrowserOpen}
         onOpenChange={setTemplateBrowserOpen}
         onSelectTemplate={onLoadTemplate}
+        brandColors={{
+          primary: currentBrand.primaryColor,
+          secondary: currentBrand.secondaryColor,
+          accent: currentBrand.accentColor,
+        }}
       />
     </div>
   );

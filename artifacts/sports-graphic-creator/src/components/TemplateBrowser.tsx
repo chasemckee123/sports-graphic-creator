@@ -14,6 +14,7 @@ interface TemplateBrowserProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSelectTemplate: (name: string) => void;
+  brandColors: { primary: string; secondary: string; accent: string };
 }
 
 const layoutIcons: Record<string, React.ReactNode> = {
@@ -173,8 +174,8 @@ const layoutIcons: Record<string, React.ReactNode> = {
   ),
 };
 
-function TemplateThumbnail({ template, onClick }: { template: TemplateInfo; onClick: () => void }) {
-  const [c1, c2, c3] = template.colors;
+function TemplateThumbnail({ template, onClick, brandColors }: { template: TemplateInfo; onClick: () => void; brandColors: { primary: string; secondary: string; accent: string } }) {
+  const [c1, c2, c3] = [brandColors.primary, brandColors.secondary, brandColors.accent];
   return (
     <button
       onClick={onClick}
@@ -207,7 +208,7 @@ function TemplateThumbnail({ template, onClick }: { template: TemplateInfo; onCl
   );
 }
 
-export function TemplateBrowser({ open, onOpenChange, onSelectTemplate }: TemplateBrowserProps) {
+export function TemplateBrowser({ open, onOpenChange, onSelectTemplate, brandColors }: TemplateBrowserProps) {
   const [activeCategory, setActiveCategory] = useState<string>('All');
 
   const handleSelect = (name: string) => {
@@ -257,6 +258,7 @@ export function TemplateBrowser({ open, onOpenChange, onSelectTemplate }: Templa
                       key={template.name}
                       template={template}
                       onClick={() => handleSelect(template.name)}
+                      brandColors={brandColors}
                     />
                   ))}
                 </div>
