@@ -112,6 +112,49 @@ export function useEditor() {
     canvas.setActiveObject(text);
   };
 
+  const addImage = () => {
+    if (!canvas) return;
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onerror = () => {
+        console.error('Failed to read image file');
+      };
+      reader.onload = (ev) => {
+        const dataUrl = ev.target?.result as string;
+        if (!dataUrl) return;
+        const imgEl = new Image();
+        imgEl.onerror = () => {
+          console.error('Failed to load image');
+        };
+        imgEl.onload = () => {
+          const fImg = new fabric.Image(imgEl);
+          const maxDim = 600;
+          const scale = Math.min(maxDim / imgEl.width, maxDim / imgEl.height, 1);
+          fImg.set({
+            left: 540,
+            top: 540,
+            originX: 'center',
+            originY: 'center',
+            scaleX: scale,
+            scaleY: scale,
+          });
+          Object.assign(fImg, { id: crypto.randomUUID(), name: 'Image Layer', role: 'none' });
+          canvas.add(fImg);
+          canvas.setActiveObject(fImg);
+          canvas.renderAll();
+        };
+        imgEl.src = dataUrl;
+      };
+      reader.readAsDataURL(file);
+    };
+    input.click();
+  };
+
   const addShape = (type: 'rect' | 'circle' | 'triangle') => {
     if (!canvas) return;
     let shape;
@@ -236,7 +279,8 @@ export function useEditor() {
     (activeObject as any).set(key, value);
     canvas.renderAll();
     syncObjects(canvas);
-    setActiveObject({ ...asCustom(activeObject as fabric.Object) });
+    const freshRef = canvas.getActiveObject();
+    setActiveObject(freshRef ? asCustom(freshRef) : asCustom(activeObject as fabric.Object));
   };
 
   const moveLayer = (obj: CustomFabricObject, direction: 'up' | 'down' | 'top' | 'bottom') => {
@@ -262,6 +306,7 @@ export function useEditor() {
     actions: {
       loadTemplate,
       addText,
+      addImage,
       addShape,
       autoBrand,
       switchStyle,

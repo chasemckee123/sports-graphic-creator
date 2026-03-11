@@ -3,7 +3,7 @@ import { useEditor } from '@/hooks/use-editor';
 import { LayerPanel } from '@/components/LayerPanel';
 import { PropertiesPanel } from '@/components/PropertiesPanel';
 import { TopBar } from '@/components/TopBar';
-import { Type, Square, Play } from 'lucide-react';
+import { Type, Square, Play, ImagePlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function EditorPage() {
@@ -70,6 +70,10 @@ export default function EditorPage() {
           <Button variant="ghost" size="icon" className="rounded-full hover:bg-primary/20 hover:text-primary" onClick={() => actions.addShape('triangle')} title="Add Triangle">
             <Play className="h-5 w-5 -rotate-90" />
           </Button>
+          <div className="w-px h-5 bg-border mx-1" />
+          <Button variant="ghost" size="icon" className="rounded-full hover:bg-primary/20 hover:text-primary" onClick={actions.addImage} title="Add Image">
+            <ImagePlus className="h-5 w-5" />
+          </Button>
         </div>
 
         <div
@@ -94,7 +98,7 @@ export default function EditorPage() {
         </div>
       </main>
 
-      <PropertiesPanel activeObject={activeObject} onUpdate={actions.updateObjectProp} />
+      <PropertiesPanel activeObject={activeObject} onUpdate={actions.updateObjectProp} canvas={canvas} />
     </div>
   );
 }

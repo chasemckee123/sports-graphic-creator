@@ -91,6 +91,16 @@ Generated Zod schemas from the OpenAPI spec (e.g. `HealthCheckResponse`). Used b
 
 Generated React Query hooks and fetch client from the OpenAPI spec (e.g. `useHealthCheck`, `healthCheck`).
 
+### `artifacts/sports-graphic-creator` (`@workspace/sports-graphic-creator`)
+
+React + Vite web app for creating sports graphics using Fabric.js canvas.
+
+- **Image upload**: Users can upload images via the floating toolbar "Add Image" button. Images are added as movable, resizable Fabric.js objects.
+- **Background removal**: Uses `@imgly/background-removal` (client-side WASM, no API key) to remove image backgrounds. Accessible from PropertiesPanel when an image is selected.
+- **Photo filters**: Brightness, Contrast, Saturation sliders and Grayscale toggle in PropertiesPanel, applied via Fabric.js image filters in real-time.
+- Key files: `src/hooks/use-editor.ts` (canvas actions), `src/pages/EditorPage.tsx` (toolbar), `src/components/PropertiesPanel.tsx` (properties/filters)
+- Dependencies: `fabric`, `@imgly/background-removal`, `onnxruntime-web`
+
 ### `scripts` (`@workspace/scripts`)
 
 Utility scripts package. Each script is a `.ts` file in `src/` with a corresponding npm script in `package.json`. Run scripts via `pnpm --filter @workspace/scripts run <script>`. Scripts can import any workspace package (e.g., `@workspace/db`) by adding it as a dependency in `scripts/package.json`.
