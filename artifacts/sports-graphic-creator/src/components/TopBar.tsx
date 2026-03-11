@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Download, RefreshCcw, Wand2, Settings, ZoomIn, ZoomOut, LayoutTemplate } from 'lucide-react';
 import { BrandSettings } from './BrandSettings';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { TemplateBrowser } from './TemplateBrowser';
 import { useToast } from '@/hooks/use-toast';
 import { FormatSelector, CanvasFormat } from './FormatSelector';
 
@@ -38,10 +38,9 @@ function BrandPaletteDots({ brand }: { brand: BrandData }) {
 
 export function TopBar({ onExport, onAutoBrand, onSwitchStyle, zoom, setZoom, onLoadTemplate, currentBrand, canvasFormat, onFormatChange }: TopBarProps) {
   const [brandOpen, setBrandOpen] = useState(false);
+  const [templateBrowserOpen, setTemplateBrowserOpen] = useState(false);
   const [isApplying, setIsApplying] = useState(false);
   const { toast } = useToast();
-
-  const templates = ['Game Day', 'Score Announcement', 'Player Spotlight', 'Branded Landscape', 'Blank Canvas'];
 
   const styleLabels = ['Original', 'Variation A', 'Variation B'];
 
@@ -84,27 +83,15 @@ export function TopBar({ onExport, onAutoBrand, onSwitchStyle, zoom, setZoom, on
         </h1>
         <div className="h-6 w-px bg-border mx-2"></div>
 
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline" size="sm" className="font-sans normal-case gap-2">
-              <LayoutTemplate className="h-4 w-4" />
-              Templates
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-56 p-2 bg-card border-border shadow-2xl">
-            <div className="space-y-1">
-              {templates.map((t) => (
-                <button
-                  key={t}
-                  onClick={() => onLoadTemplate(t)}
-                  className="w-full text-left px-3 py-2 text-sm hover:bg-primary/20 hover:text-primary rounded-sm transition-colors uppercase font-display tracking-wide"
-                >
-                  {t}
-                </button>
-              ))}
-            </div>
-          </PopoverContent>
-        </Popover>
+        <Button
+          variant="outline"
+          size="sm"
+          className="font-sans normal-case gap-2"
+          onClick={() => setTemplateBrowserOpen(true)}
+        >
+          <LayoutTemplate className="h-4 w-4" />
+          Templates
+        </Button>
       </div>
 
       <div className="flex items-center gap-2">
@@ -143,6 +130,11 @@ export function TopBar({ onExport, onAutoBrand, onSwitchStyle, zoom, setZoom, on
       </div>
 
       <BrandSettings open={brandOpen} onOpenChange={setBrandOpen} />
+      <TemplateBrowser
+        open={templateBrowserOpen}
+        onOpenChange={setTemplateBrowserOpen}
+        onSelectTemplate={onLoadTemplate}
+      />
     </div>
   );
 }

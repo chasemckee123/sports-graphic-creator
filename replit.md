@@ -93,13 +93,26 @@ Generated React Query hooks and fetch client from the OpenAPI spec (e.g. `useHea
 
 ### `artifacts/sports-graphic-creator` (`@workspace/sports-graphic-creator`)
 
-React + Vite web app for creating sports graphics using Fabric.js canvas.
+React + Vite sports graphic design tool with Fabric.js canvas for creating social media graphics.
 
-- **Image upload**: Users can upload images via the floating toolbar "Add Image" button. Images are added as movable, resizable Fabric.js objects.
-- **Background removal**: Uses `@imgly/background-removal` (client-side WASM, no API key) to remove image backgrounds. Accessible from PropertiesPanel when an image is selected.
-- **Photo filters**: Brightness, Contrast, Saturation sliders and Grayscale toggle in PropertiesPanel, applied via Fabric.js image filters in real-time.
-- Key files: `src/hooks/use-editor.ts` (canvas actions), `src/pages/EditorPage.tsx` (toolbar), `src/components/PropertiesPanel.tsx` (properties/filters)
-- Dependencies: `fabric`, `@imgly/background-removal`, `onnxruntime-web`
+- **Templates**: 14+ templates across 6 categories (Game Day, Scores & Results, Player Features, Schedule & Events, Announcements, Blank) with a full-screen `TemplateBrowser.tsx` modal.
+- **Canvas Formats**: Multi-format support (Instagram Post/Story, Twitter/X, Facebook Cover, Custom) with proportional scaling of all objects and `FormatSelector.tsx` component.
+- **Image Editing**: Floating toolbar "Add Image" button, client-side background removal using `@imgly/background-removal`, and real-time photo filters (Brightness, Contrast, Saturation, Grayscale).
+- **Auto-Brand**: Role-based layer system (primary, secondary, accent, text, logo, background) for consistent branding across templates.
+- **Export**: Canvas export with format-specific naming and dimensions.
+
+Key files:
+- `src/hooks/use-editor.ts` — Core canvas state, actions, format switching, and object scaling logic.
+- `src/lib/templates.ts` — Template definitions (applyTemplate) and `templateLibrary` metadata with categories and layout info.
+- `src/lib/canvas-formats.ts` — Shared canvas dimensions and preset definitions.
+- `src/components/TemplateBrowser.tsx` — Full-screen modal with category tabs and visual SVG thumbnails.
+- `src/components/FormatSelector.tsx` — Preset dropdown and custom size inputs for the canvas.
+- `src/components/TopBar.tsx` — Navigation with template browser, format selector, and brand settings.
+- `src/components/PropertiesPanel.tsx` — Real-time image filters and background removal controls.
+- `src/lib/fabric-types.ts` — Custom Fabric.js type extensions for the role-based layer system.
+- `src/pages/EditorPage.tsx` — Main editor layout and viewport management.
+
+Dependencies: `fabric`, `@imgly/background-removal`, `onnxruntime-web`, `lucide-react`.
 
 ### `scripts` (`@workspace/scripts`)
 
