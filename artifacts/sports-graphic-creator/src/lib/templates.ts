@@ -71,7 +71,10 @@ export const applyTemplate = async (
   const sy = dims.height / 1080;
 
   const addObj = (obj: any, customProps: Partial<CustomFabricObject>) => {
-    Object.assign(obj, { id: generateId(), ...customProps });
+    const lockProps = customProps.locked
+      ? { selectable: false, evented: false }
+      : {};
+    Object.assign(obj, { id: generateId(), ...customProps, ...lockProps });
     canvas.add(obj);
   };
 

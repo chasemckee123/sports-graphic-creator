@@ -6,6 +6,9 @@ import { useGetBrand } from '@workspace/api-client-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { CanvasFormat, FORMAT_PRESETS } from '@/lib/canvas-formats';
 
+fabric.FabricObject.ownDefaults.originX = 'left';
+fabric.FabricObject.ownDefaults.originY = 'top';
+
 interface BrandData {
   primaryColor: string;
   secondaryColor: string;
@@ -178,8 +181,8 @@ export function useEditor() {
           const maxDim = 600;
           const scale = Math.min(maxDim / imgEl.width, maxDim / imgEl.height, 1);
           fImg.set({
-            left: 540,
-            top: 540,
+            left: canvas.getWidth() / 2,
+            top: canvas.getHeight() / 2,
             originX: 'center',
             originY: 'center',
             scaleX: scale,
