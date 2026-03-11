@@ -139,6 +139,7 @@ export function useEditor() {
           logoUrl: data.logoUrl,
           organizationName: data.organizationName || DEFAULT_BRAND.organizationName,
         };
+        queryClient.setQueryData(['/api/brand'], data);
       }
     } catch {
       // Fall back to cached brand
