@@ -143,20 +143,15 @@ export const applyTemplate = async (
 
     case 'Branded Landscape': {
       const lBg = new fabric.Rect({
-        width: 1920, height: 1080, fill: '#111111', selectable: false
+        width: 1920, height: 1080, fill: '#162c54', selectable: false
       });
-      addObj(lBg, { name: 'Background', role: 'background', locked: true });
-
-      const primaryShape = new fabric.Rect({
-        width: 1920, height: 1080, fill: '#162c54', left: 0, top: 0, selectable: false
-      });
-      addObj(primaryShape, { name: 'Primary Color', role: 'primary', locked: true });
+      addObj(lBg, { name: 'Background', role: 'primary', locked: true });
 
       const secondaryShape = new fabric.Polygon([
-        { x: 150, y: 0 },
-        { x: 1350, y: 0 },
-        { x: 1770, y: 1080 },
-        { x: 570, y: 1080 }
+        { x: 100, y: 0 },
+        { x: 1100, y: 0 },
+        { x: 1820, y: 1080 },
+        { x: 820, y: 1080 }
       ], {
         fill: '#78cef4',
         selectable: false
@@ -193,19 +188,17 @@ export const applyTemplate = async (
       globalCompositeOperation: 'multiply'
     });
     const patternCanvas = document.createElement('canvas');
-    patternCanvas.width = 200;
+    patternCanvas.width = 4;
     patternCanvas.height = 200;
     const pCtx = patternCanvas.getContext('2d');
     if (pCtx) {
-      pCtx.fillStyle = 'rgba(139,119,101,0.3)';
-      pCtx.fillRect(0, 0, 200, 200);
-      for (let i = 0; i < 3000; i++) {
-        const x = Math.random() * 200;
-        const y = Math.random() * 200;
-        const size = Math.random() * 2 + 0.5;
-        const alpha = Math.random() * 0.12;
-        pCtx.fillStyle = `rgba(${100 + Math.floor(Math.random() * 80)},${80 + Math.floor(Math.random() * 60)},${60 + Math.floor(Math.random() * 40)},${alpha})`;
-        pCtx.fillRect(x, y, size, size);
+      pCtx.fillStyle = 'rgba(200,200,200,0.06)';
+      pCtx.fillRect(0, 0, 4, 200);
+      for (let y = 0; y < 200; y++) {
+        const alpha = Math.random() * 0.08;
+        pCtx.fillStyle = `rgba(255,255,255,${alpha})`;
+        pCtx.fillRect(0, y, 1, 1);
+        pCtx.fillRect(2, y, 1, 1);
       }
     }
     const texturePattern = new fabric.Pattern({
@@ -213,7 +206,7 @@ export const applyTemplate = async (
       repeat: 'repeat'
     });
     textureOverlay.set('fill', texturePattern);
-    textureOverlay.set('opacity', 0.8);
+    textureOverlay.set('opacity', 0.5);
     addObj(textureOverlay, { name: 'Texture Overlay', role: 'background', locked: true });
     canvas.renderAll();
   };
