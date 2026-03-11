@@ -3,6 +3,22 @@ import * as fabric from 'fabric';
 import { CustomFabricObject, asCustom } from '@/lib/fabric-types';
 import { applyTemplate } from '@/lib/templates';
 import { useGetBrand } from '@workspace/api-client-react';
+import { useQueryClient } from '@tanstack/react-query';
+
+interface BrandData {
+  primaryColor: string;
+  secondaryColor: string;
+  accentColor: string;
+  logoUrl?: string;
+  organizationName: string;
+}
+
+const DEFAULT_BRAND: BrandData = {
+  primaryColor: '#1a3a6b',
+  secondaryColor: '#c8a951',
+  accentColor: '#ffffff',
+  organizationName: 'My Team',
+};
 
 export function useEditor() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -11,24 +27,25 @@ export function useEditor() {
   const [objects, setObjects] = useState<CustomFabricObject[]>([]);
   const [zoom, setZoom] = useState(1);
   const [styleRotation, setStyleRotation] = useState(0);
+  const queryClient = useQueryClient();
 
   const { data: brand } = useGetBrand({
     query: {
-      retry: false, // Don't block UI if backend is not setup
-    }
+      retry: false,
+    },
   });
 
-  // Default brand fallback if API fails
-  const currentBrand = brand || {
-    primaryColor: '#00FF66',
-    secondaryColor: '#1E293B',
-    accentColor: '#FFFFFF',
-    logoUrl: `${import.meta.env.BASE_URL}images/default-logo.png`,
-    organizationName: 'Team Name'
-  };
+  const currentBrand: BrandData = brand
+    ? {
+        primaryColor: brand.primaryColor || DEFAULT_BRAND.primaryColor,
+        secondaryColor: brand.secondaryColor || DEFAULT_BRAND.secondaryColor,
+        accentColor: brand.accentColor || DEFAULT_BRAND.accentColor,
+        logoUrl: brand.logoUrl,
+        organizationName: brand.organizationName || DEFAULT_BRAND.organizationName,
+      }
+    : DEFAULT_BRAND;
 
   const syncObjects = useCallback((c: fabric.Canvas) => {
-    // Reverse so top layers are at the top of the list
     setObjects([...c.getObjects().map(asCustom)].reverse());
   }, []);
 
@@ -44,7 +61,6 @@ export function useEditor() {
       selectionLineWidth: 2,
     });
 
-    // Custom properties to serialize
     const originalToJSON = c.toJSON;
     c.toJSON = function (propertiesToInclude = []) {
       return originalToJSON.call(this, ['id', 'name', 'role', 'locked', ...propertiesToInclude]);
@@ -53,11 +69,14 @@ export function useEditor() {
     c.on('selection:created', (e) => setActiveObject(asCustom(e.selected?.[0] as fabric.Object)));
     c.on('selection:updated', (e) => setActiveObject(asCustom(e.selected?.[0] as fabric.Object)));
     c.on('selection:cleared', () => setActiveObject(null));
-    
+
     c.on('object:added', () => syncObjects(c));
     c.on('object:removed', () => syncObjects(c));
     c.on('object:modified', () => syncObjects(c));
-    c.on('text:changed', () => { c.renderAll(); syncObjects(c); });
+    c.on('text:changed', () => {
+      c.renderAll();
+      syncObjects(c);
+    });
 
     setCanvas(c);
     applyTemplate(c, 'Game Day', currentBrand.logoUrl);
@@ -69,7 +88,6 @@ export function useEditor() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canvasRef]);
 
-  // Actions
   const loadTemplate = (name: string) => {
     if (!canvas) return;
     applyTemplate(canvas, name, currentBrand.logoUrl);
@@ -95,7 +113,7 @@ export function useEditor() {
     if (!canvas) return;
     let shape;
     const common = { fill: currentBrand.primaryColor, left: 540, top: 540, originX: 'center', originY: 'center' as const };
-    
+
     if (type === 'rect') shape = new fabric.Rect({ ...common, width: 200, height: 200 });
     else if (type === 'circle') shape = new fabric.Circle({ ...common, radius: 100 });
     else shape = new fabric.Triangle({ ...common, width: 200, height: 200 });
@@ -105,43 +123,74 @@ export function useEditor() {
     canvas.setActiveObject(shape);
   };
 
-  const autoBrand = () => {
-    if (!canvas) return;
-    canvas.getObjects().forEach((obj) => {
-      const cObj = asCustom(obj);
-      if (cObj.role === 'primary') obj.set('fill', currentBrand.primaryColor);
-      if (cObj.role === 'secondary') obj.set('fill', currentBrand.secondaryColor);
-      if (cObj.role === 'accent') obj.set('fill', currentBrand.accentColor);
-      
-      if (cObj.role === 'logo' && currentBrand.logoUrl) {
-         fabric.Image.fromURL(currentBrand.logoUrl, (newImg) => {
-           if (!newImg) return;
-           newImg.set({
-             left: obj.left, top: obj.top,
-             scaleX: obj.scaleX, scaleY: obj.scaleY,
-             originX: obj.originX, originY: obj.originY,
-             angle: obj.angle
-           });
-           Object.assign(newImg, { id: cObj.id, name: cObj.name, role: cObj.role });
-           canvas.remove(obj);
-           canvas.add(newImg);
-           canvas.renderAll();
-         }, { crossOrigin: 'anonymous' });
+  const autoBrand = async (): Promise<{ success: boolean; brand: BrandData }> => {
+    if (!canvas) return { success: false, brand: currentBrand };
+
+    let freshBrand: BrandData = currentBrand;
+    try {
+      await queryClient.invalidateQueries({ queryKey: ['/api/brand'] });
+      const response = await fetch('/api/brand');
+      if (response.ok) {
+        const data = await response.json();
+        freshBrand = {
+          primaryColor: data.primaryColor || DEFAULT_BRAND.primaryColor,
+          secondaryColor: data.secondaryColor || DEFAULT_BRAND.secondaryColor,
+          accentColor: data.accentColor || DEFAULT_BRAND.accentColor,
+          logoUrl: data.logoUrl,
+          organizationName: data.organizationName || DEFAULT_BRAND.organizationName,
+        };
       }
-    });
+    } catch {
+      // Fall back to cached brand
+    }
+
+    setStyleRotation(0);
+
+    const objectsToProcess = [...canvas.getObjects()];
+    for (const obj of objectsToProcess) {
+      const cObj = asCustom(obj);
+      if (cObj.role === 'primary') obj.set('fill', freshBrand.primaryColor);
+      if (cObj.role === 'secondary') obj.set('fill', freshBrand.secondaryColor);
+      if (cObj.role === 'accent') obj.set('fill', freshBrand.accentColor);
+
+      if (cObj.role === 'logo' && freshBrand.logoUrl) {
+        try {
+          const newImg = await new Promise<fabric.Image | null>((resolve) => {
+            fabric.Image.fromURL(
+              freshBrand.logoUrl!,
+              (img) => resolve(img),
+              { crossOrigin: 'anonymous' }
+            );
+          });
+          if (newImg) {
+            newImg.set({
+              left: obj.left,
+              top: obj.top,
+              scaleX: obj.scaleX,
+              scaleY: obj.scaleY,
+              originX: obj.originX,
+              originY: obj.originY,
+              angle: obj.angle,
+            });
+            Object.assign(newImg, { id: cObj.id, name: cObj.name, role: cObj.role });
+            canvas.remove(obj);
+            canvas.add(newImg);
+          }
+        } catch {
+          // Keep existing logo if loading fails
+        }
+      }
+    }
     canvas.renderAll();
     syncObjects(canvas);
+    return { success: true, brand: freshBrand };
   };
 
-  const switchStyle = () => {
-    if (!canvas) return;
+  const switchStyle = (): { rotation: number; brand: BrandData } => {
+    if (!canvas) return { rotation: 0, brand: currentBrand };
     const nextRot = (styleRotation + 1) % 3;
     setStyleRotation(nextRot);
 
-    // Rotations:
-    // 0: P->P, S->S, A->A
-    // 1: P->S, S->A, A->P
-    // 2: P->A, S->P, A->S
     const palettes = [
       { primary: currentBrand.primaryColor, secondary: currentBrand.secondaryColor, accent: currentBrand.accentColor },
       { primary: currentBrand.secondaryColor, secondary: currentBrand.accentColor, accent: currentBrand.primaryColor },
@@ -158,6 +207,7 @@ export function useEditor() {
     });
     canvas.renderAll();
     syncObjects(canvas);
+    return { rotation: nextRot, brand: currentBrand };
   };
 
   const deleteActive = () => {
@@ -177,14 +227,12 @@ export function useEditor() {
     a.click();
   };
 
-  // Property updaters
   const updateObjectProp = (key: string, value: any) => {
     if (!canvas || !activeObject) return;
     (activeObject as any).set(key, value);
     canvas.renderAll();
     syncObjects(canvas);
-    // Force re-render of active object properties
-    setActiveObject({ ...asCustom(activeObject as fabric.Object) }); 
+    setActiveObject({ ...asCustom(activeObject as fabric.Object) });
   };
 
   const moveLayer = (obj: CustomFabricObject, direction: 'up' | 'down' | 'top' | 'bottom') => {
@@ -205,6 +253,7 @@ export function useEditor() {
     activeObject,
     zoom,
     setZoom,
+    currentBrand,
     actions: {
       loadTemplate,
       addText,
@@ -215,6 +264,6 @@ export function useEditor() {
       exportCanvas,
       updateObjectProp,
       moveLayer,
-    }
+    },
   };
 }

@@ -1,30 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useEditor } from '@/hooks/use-editor';
 import { LayerPanel } from '@/components/LayerPanel';
 import { PropertiesPanel } from '@/components/PropertiesPanel';
 import { TopBar } from '@/components/TopBar';
-import { Type, Square, LayoutPanelTop, Play } from 'lucide-react';
+import { Type, Square, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function EditorPage() {
-  const { 
-    canvasRef, 
-    objects, 
-    activeObject, 
-    zoom, 
+  const {
+    canvasRef,
+    canvas,
+    objects,
+    activeObject,
+    zoom,
     setZoom,
-    actions 
+    currentBrand,
+    actions,
   } = useEditor();
 
-  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
   const wrapperRef = React.useRef<HTMLDivElement>(null);
 
-  // Responsive zoom handling
   useEffect(() => {
     const updateSize = () => {
       if (wrapperRef.current) {
         const { clientWidth, clientHeight } = wrapperRef.current;
-        // Calculate fit zoom with padding
         const padding = 80;
         const scaleX = (clientWidth - padding) / 1080;
         const scaleY = (clientHeight - padding) / 1080;
@@ -32,35 +31,33 @@ export default function EditorPage() {
         setZoom(Number(fitZoom.toFixed(2)));
       }
     };
-    
+
     updateSize();
     window.addEventListener('resize', updateSize);
     return () => window.removeEventListener('resize', updateSize);
   }, [setZoom]);
 
-
   return (
     <div className="flex h-screen w-full bg-background text-foreground overflow-hidden font-sans">
-      
-      <LayerPanel 
-        objects={objects} 
-        activeObject={activeObject} 
-        canvas={actions.deleteActive as any} // not used internally for canvas obj
+      <LayerPanel
+        objects={objects}
+        activeObject={activeObject}
+        canvas={canvas}
         onMove={actions.moveLayer}
         onDelete={actions.deleteActive}
       />
-      
+
       <main className="flex-1 flex flex-col min-w-0 relative">
-        <TopBar 
+        <TopBar
           onExport={actions.exportCanvas}
           onAutoBrand={actions.autoBrand}
           onSwitchStyle={actions.switchStyle}
           zoom={zoom}
           setZoom={setZoom}
           onLoadTemplate={actions.loadTemplate}
+          currentBrand={currentBrand}
         />
-        
-        {/* Canvas Toolbar */}
+
         <div className="absolute top-20 left-1/2 -translate-x-1/2 z-20 glass-panel rounded-full px-4 py-2 flex items-center gap-2">
           <Button variant="ghost" size="icon" className="rounded-full hover:bg-primary/20 hover:text-primary" onClick={actions.addText} title="Add Text">
             <Type className="h-5 w-5" />
@@ -74,22 +71,21 @@ export default function EditorPage() {
           </Button>
         </div>
 
-        {/* Workspace Area */}
-        <div 
+        <div
           ref={wrapperRef}
           className="flex-1 bg-[#050810] relative flex items-center justify-center overflow-auto pattern-grid"
           style={{
             backgroundImage: `radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px)`,
-            backgroundSize: '40px 40px'
+            backgroundSize: '40px 40px',
           }}
         >
-          <div 
+          <div
             className="canvas-shadow transition-transform duration-200 ease-out origin-center"
-            style={{ 
-              width: 1080, 
-              height: 1080, 
+            style={{
+              width: 1080,
+              height: 1080,
               transform: `scale(${zoom})`,
-              backgroundColor: '#000'
+              backgroundColor: '#000',
             }}
           >
             <canvas ref={canvasRef} id="canvas" />
@@ -97,11 +93,7 @@ export default function EditorPage() {
         </div>
       </main>
 
-      <PropertiesPanel 
-        activeObject={activeObject} 
-        onUpdate={actions.updateObjectProp} 
-      />
-
+      <PropertiesPanel activeObject={activeObject} onUpdate={actions.updateObjectProp} />
     </div>
   );
 }
