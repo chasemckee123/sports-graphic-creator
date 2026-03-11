@@ -14,6 +14,7 @@ export default function EditorPage() {
     activeObject,
     zoom,
     setZoom,
+    canvasDimensions,
     currentBrand,
     actions,
   } = useEditor();
@@ -25,8 +26,8 @@ export default function EditorPage() {
       if (wrapperRef.current) {
         const { clientWidth, clientHeight } = wrapperRef.current;
         const padding = 80;
-        const scaleX = (clientWidth - padding) / 1080;
-        const scaleY = (clientHeight - padding) / 1080;
+        const scaleX = (clientWidth - padding) / canvasDimensions.width;
+        const scaleY = (clientHeight - padding) / canvasDimensions.height;
         const fitZoom = Math.min(scaleX, scaleY);
         setZoom(Number(fitZoom.toFixed(2)));
       }
@@ -35,7 +36,7 @@ export default function EditorPage() {
     updateSize();
     window.addEventListener('resize', updateSize);
     return () => window.removeEventListener('resize', updateSize);
-  }, [setZoom]);
+  }, [setZoom, canvasDimensions]);
 
   return (
     <div className="flex h-screen w-full bg-background text-foreground overflow-hidden font-sans">
@@ -82,8 +83,8 @@ export default function EditorPage() {
           <div
             className="canvas-shadow transition-transform duration-200 ease-out origin-center"
             style={{
-              width: 1080,
-              height: 1080,
+              width: canvasDimensions.width,
+              height: canvasDimensions.height,
               transform: `scale(${zoom})`,
               backgroundColor: '#000',
             }}

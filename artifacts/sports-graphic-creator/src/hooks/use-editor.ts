@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import * as fabric from 'fabric';
 import { CustomFabricObject, asCustom } from '@/lib/fabric-types';
-import { applyTemplate } from '@/lib/templates';
+import { applyTemplate, templateDimensions } from '@/lib/templates';
 import { useGetBrand } from '@workspace/api-client-react';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -26,6 +26,7 @@ export function useEditor() {
   const [activeObject, setActiveObject] = useState<CustomFabricObject | null>(null);
   const [objects, setObjects] = useState<CustomFabricObject[]>([]);
   const [zoom, setZoom] = useState(1);
+  const [canvasDimensions, setCanvasDimensions] = useState({ width: 1080, height: 1080 });
   const [styleRotation, setStyleRotation] = useState(0);
   const queryClient = useQueryClient();
 
@@ -90,6 +91,8 @@ export function useEditor() {
 
   const loadTemplate = (name: string) => {
     if (!canvas) return;
+    const dims = templateDimensions[name] || { width: 1080, height: 1080 };
+    setCanvasDimensions(dims);
     applyTemplate(canvas, name, currentBrand.logoUrl);
   };
 
@@ -254,6 +257,7 @@ export function useEditor() {
     activeObject,
     zoom,
     setZoom,
+    canvasDimensions,
     currentBrand,
     actions: {
       loadTemplate,

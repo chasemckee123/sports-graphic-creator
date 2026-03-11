@@ -38,7 +38,7 @@ export function TopBar({ onExport, onAutoBrand, onSwitchStyle, zoom, setZoom, on
   const [isApplying, setIsApplying] = useState(false);
   const { toast } = useToast();
 
-  const templates = ['Game Day', 'Score Announcement', 'Player Spotlight', 'Blank Canvas'];
+  const templates = ['Game Day', 'Score Announcement', 'Player Spotlight', 'Branded Landscape', 'Blank Canvas'];
 
   const styleLabels = ['Original', 'Variation A', 'Variation B'];
 

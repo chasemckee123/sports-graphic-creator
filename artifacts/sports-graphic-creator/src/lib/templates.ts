@@ -8,6 +8,14 @@ const defaultColors = {
   accent: '#facc15', // Yellow
 };
 
+export const templateDimensions: Record<string, { width: number; height: number }> = {
+  'Game Day': { width: 1080, height: 1080 },
+  'Score Announcement': { width: 1080, height: 1080 },
+  'Player Spotlight': { width: 1080, height: 1080 },
+  'Blank Canvas': { width: 1080, height: 1080 },
+  'Branded Landscape': { width: 1920, height: 1080 },
+};
+
 export const applyTemplate = async (
   canvas: fabric.Canvas,
   templateName: string,
@@ -15,6 +23,9 @@ export const applyTemplate = async (
 ) => {
   canvas.clear();
   canvas.backgroundColor = '#000000';
+
+  const dims = templateDimensions[templateName] || { width: 1080, height: 1080 };
+  canvas.setDimensions(dims);
 
   const addObj = (obj: any, customProps: Partial<CustomFabricObject>) => {
     Object.assign(obj, { id: generateId(), ...customProps });
@@ -130,6 +141,39 @@ export const applyTemplate = async (
       addObj(stat1, { name: 'Stat 1', role: 'text' });
       break;
 
+    case 'Branded Landscape': {
+      const lBg = new fabric.Rect({
+        width: 1920, height: 1080, fill: '#111111', selectable: false
+      });
+      addObj(lBg, { name: 'Background', role: 'background', locked: true });
+
+      const primaryShape = new fabric.Rect({
+        width: 1920, height: 1080, fill: '#162c54', left: 0, top: 0, selectable: false
+      });
+      addObj(primaryShape, { name: 'Primary Color', role: 'primary', locked: true });
+
+      const secondaryShape = new fabric.Polygon([
+        { x: 150, y: 0 },
+        { x: 1350, y: 0 },
+        { x: 1770, y: 1080 },
+        { x: 570, y: 1080 }
+      ], {
+        fill: '#78cef4',
+        selectable: false
+      });
+      addObj(secondaryShape, { name: 'Secondary Color', role: 'secondary', locked: true });
+
+      const logoPlaceholder = new fabric.Rect({
+        width: 520, height: 447, fill: 'rgba(255,255,255,0.08)',
+        left: 960, top: 540, originX: 'center', originY: 'center',
+        rx: 10, ry: 10, stroke: 'rgba(255,255,255,0.15)', strokeWidth: 2,
+        selectable: false, evented: false
+      });
+      addObj(logoPlaceholder, { name: 'Logo Placeholder', role: 'background', locked: true });
+
+      break;
+    }
+
     default:
       // Blank canvas
       const blankBg = new fabric.Rect({ width: 1080, height: 1080, fill: '#1e293b' });
@@ -137,20 +181,75 @@ export const applyTemplate = async (
       break;
   }
 
-  // Common: Add Logo if exists, or placeholder
+  const isLandscape = templateName === 'Branded Landscape';
+  const logoCenterX = isLandscape ? dims.width / 2 : 540;
+  const logoCenterY = isLandscape ? dims.height / 2 : 100;
+  const logoSize = isLandscape ? 400 : 200;
+
+  const addLandscapeTexture = () => {
+    const textureOverlay = new fabric.Rect({
+      width: 1920, height: 1080, left: 0, top: 0,
+      fill: 'rgba(0,0,0,0)',
+      selectable: false, evented: false,
+      globalCompositeOperation: 'multiply'
+    });
+    const patternCanvas = document.createElement('canvas');
+    patternCanvas.width = 200;
+    patternCanvas.height = 200;
+    const pCtx = patternCanvas.getContext('2d');
+    if (pCtx) {
+      pCtx.fillStyle = 'rgba(139,119,101,0.3)';
+      pCtx.fillRect(0, 0, 200, 200);
+      for (let i = 0; i < 3000; i++) {
+        const x = Math.random() * 200;
+        const y = Math.random() * 200;
+        const size = Math.random() * 2 + 0.5;
+        const alpha = Math.random() * 0.12;
+        pCtx.fillStyle = `rgba(${100 + Math.floor(Math.random() * 80)},${80 + Math.floor(Math.random() * 60)},${60 + Math.floor(Math.random() * 40)},${alpha})`;
+        pCtx.fillRect(x, y, size, size);
+      }
+    }
+    const texturePattern = new fabric.Pattern({
+      source: patternCanvas,
+      repeat: 'repeat'
+    });
+    textureOverlay.set('fill', texturePattern);
+    textureOverlay.set('opacity', 0.8);
+    addObj(textureOverlay, { name: 'Texture Overlay', role: 'background', locked: true });
+    canvas.renderAll();
+  };
+
+  if (isLandscape) {
+    addLandscapeTexture();
+  }
+
   if (logoUrl) {
     fabric.Image.fromURL(logoUrl, (img) => {
-      img.scaleToWidth(200);
-      img.set({ left: 540, top: 100, originX: 'center', originY: 'center' });
+      if (isLandscape) {
+        const placeholder = canvas.getObjects().find(
+          (o) => (o as CustomFabricObject).name === 'Logo Placeholder'
+        );
+        if (placeholder) canvas.remove(placeholder);
+      }
+      img.scaleToWidth(logoSize);
+      img.set({ left: logoCenterX, top: logoCenterY, originX: 'center', originY: 'center' });
       addObj(img, { name: 'Team Logo', role: 'logo' });
+      if (isLandscape) {
+        const texture = canvas.getObjects().find(
+          (o) => (o as CustomFabricObject).name === 'Texture Overlay'
+        );
+        if (texture) {
+          const topIndex = canvas.getObjects().length - 1;
+          canvas.moveTo(texture, topIndex);
+        }
+      }
       canvas.renderAll();
     }, { crossOrigin: 'anonymous' });
-  } else {
-    // Add default logo placeholder
+  } else if (!isLandscape) {
     fabric.Image.fromURL(`${import.meta.env.BASE_URL}images/default-logo.png`, (img) => {
       if(img) {
-        img.scaleToWidth(200);
-        img.set({ left: 540, top: 100, originX: 'center', originY: 'center' });
+        img.scaleToWidth(logoSize);
+        img.set({ left: logoCenterX, top: logoCenterY, originX: 'center', originY: 'center' });
         addObj(img, { name: 'Team Logo', role: 'logo' });
         canvas.renderAll();
       }
