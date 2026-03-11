@@ -4,6 +4,7 @@ import { CustomFabricObject, asCustom } from '@/lib/fabric-types';
 import { applyTemplate, templateDimensions } from '@/lib/templates';
 import { useGetBrand } from '@workspace/api-client-react';
 import { useQueryClient } from '@tanstack/react-query';
+import { CanvasFormat, FORMAT_PRESETS } from '@/lib/canvas-formats';
 
 interface BrandData {
   primaryColor: string;
@@ -26,8 +27,8 @@ export function useEditor() {
   const [activeObject, setActiveObject] = useState<CustomFabricObject | null>(null);
   const [objects, setObjects] = useState<CustomFabricObject[]>([]);
   const [zoom, setZoom] = useState(1);
-  const [canvasDimensions, setCanvasDimensions] = useState({ width: 1080, height: 1080 });
   const [styleRotation, setStyleRotation] = useState(0);
+  const [canvasFormat, setCanvasFormat] = useState<CanvasFormat>(FORMAT_PRESETS[0]);
   const queryClient = useQueryClient();
 
   const { data: brand } = useGetBrand({
@@ -89,11 +90,50 @@ export function useEditor() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canvasRef]);
 
+  const changeFormat = (format: CanvasFormat) => {
+    if (!canvas) return;
+    const oldWidth = canvas.getWidth();
+    const oldHeight = canvas.getHeight();
+    const ratioX = format.width / oldWidth;
+    const ratioY = format.height / oldHeight;
+    const uniformScale = Math.min(ratioX, ratioY);
+
+    canvas.getObjects().forEach((obj) => {
+      const cObj = asCustom(obj);
+      const left = obj.left ?? 0;
+      const top = obj.top ?? 0;
+
+      if (cObj.role === 'background') {
+        obj.set({
+          left: 0,
+          top: 0,
+          width: format.width,
+          height: format.height,
+          scaleX: 1,
+          scaleY: 1,
+        });
+      } else {
+        obj.set({
+          left: left * ratioX,
+          top: top * ratioY,
+          scaleX: (obj.scaleX ?? 1) * uniformScale,
+          scaleY: (obj.scaleY ?? 1) * uniformScale,
+        });
+      }
+      obj.setCoords();
+    });
+
+    canvas.setDimensions({ width: format.width, height: format.height });
+    canvas.renderAll();
+    syncObjects(canvas);
+    setCanvasFormat(format);
+  };
+
   const loadTemplate = (name: string) => {
     if (!canvas) return;
-    const dims = templateDimensions[name] || { width: 1080, height: 1080 };
-    setCanvasDimensions(dims);
-    applyTemplate(canvas, name, currentBrand.logoUrl);
+    const dims = templateDimensions[name] || { width: canvasFormat.width, height: canvasFormat.height };
+    setCanvasFormat({ name: canvasFormat.name, width: dims.width, height: dims.height });
+    applyTemplate(canvas, name, currentBrand.logoUrl, dims.width, dims.height);
   };
 
   const addText = () => {
@@ -102,8 +142,8 @@ export function useEditor() {
       fontFamily: 'Teko',
       fontSize: 100,
       fill: '#ffffff',
-      left: 540,
-      top: 540,
+      left: canvasFormat.width / 2,
+      top: canvasFormat.height / 2,
       originX: 'center',
       originY: 'center',
     });
@@ -158,7 +198,7 @@ export function useEditor() {
   const addShape = (type: 'rect' | 'circle' | 'triangle') => {
     if (!canvas) return;
     let shape;
-    const common = { fill: currentBrand.primaryColor, left: 540, top: 540, originX: 'center', originY: 'center' as const };
+    const common = { fill: currentBrand.primaryColor, left: canvasFormat.width / 2, top: canvasFormat.height / 2, originX: 'center', originY: 'center' as const };
 
     if (type === 'rect') shape = new fabric.Rect({ ...common, width: 200, height: 200 });
     else if (type === 'circle') shape = new fabric.Circle({ ...common, radius: 100 });
@@ -270,7 +310,8 @@ export function useEditor() {
     const dataUrl = canvas.toDataURL({ format: 'png', quality: 1, multiplier: 1 });
     const a = document.createElement('a');
     a.href = dataUrl;
-    a.download = `sports-graphic-${Date.now()}.png`;
+    const formatSlug = canvasFormat.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    a.download = `sports-graphic-${formatSlug}-${canvasFormat.width}x${canvasFormat.height}-${Date.now()}.png`;
     a.click();
   };
 
@@ -301,8 +342,8 @@ export function useEditor() {
     activeObject,
     zoom,
     setZoom,
-    canvasDimensions,
     currentBrand,
+    canvasFormat,
     actions: {
       loadTemplate,
       addText,
@@ -314,6 +355,7 @@ export function useEditor() {
       exportCanvas,
       updateObjectProp,
       moveLayer,
+      changeFormat,
     },
   };
 }

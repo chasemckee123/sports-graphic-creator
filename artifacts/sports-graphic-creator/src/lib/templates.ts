@@ -19,13 +19,18 @@ export const templateDimensions: Record<string, { width: number; height: number 
 export const applyTemplate = async (
   canvas: fabric.Canvas,
   templateName: string,
-  logoUrl?: string
+  logoUrl?: string,
+  canvasWidth: number = 1080,
+  canvasHeight: number = 1080
 ) => {
   canvas.clear();
   canvas.backgroundColor = '#000000';
 
-  const dims = templateDimensions[templateName] || { width: 1080, height: 1080 };
+  const dims = templateDimensions[templateName] || { width: canvasWidth, height: canvasHeight };
   canvas.setDimensions(dims);
+
+  const sx = dims.width / 1080;
+  const sy = dims.height / 1080;
 
   const addObj = (obj: any, customProps: Partial<CustomFabricObject>) => {
     Object.assign(obj, { id: generateId(), ...customProps });
@@ -34,109 +39,104 @@ export const applyTemplate = async (
 
   switch (templateName) {
     case 'Game Day':
-      // Background
       const bg = new fabric.Rect({
-        width: 1080, height: 1080, fill: '#111111', selectable: false
+        width: dims.width, height: dims.height, fill: '#111111', selectable: false
       });
       addObj(bg, { name: 'Background', role: 'background', locked: true });
 
-      // Action Angle
       const angle = new fabric.Polygon([
-        { x: 0, y: 1080 }, { x: 1080, y: 1080 }, { x: 1080, y: 400 }, { x: 0, y: 800 }
+        { x: 0, y: dims.height }, { x: dims.width, y: dims.height }, { x: dims.width, y: 400 * sy }, { x: 0, y: 800 * sy }
       ], { fill: defaultColors.primary, opacity: 0.9 });
       addObj(angle, { name: 'Primary Angle', role: 'primary' });
       
       const angle2 = new fabric.Polygon([
-        { x: 0, y: 1080 }, { x: 1080, y: 1080 }, { x: 1080, y: 500 }, { x: 0, y: 900 }
+        { x: 0, y: dims.height }, { x: dims.width, y: dims.height }, { x: dims.width, y: 500 * sy }, { x: 0, y: 900 * sy }
       ], { fill: defaultColors.secondary, opacity: 0.8 });
       addObj(angle2, { name: 'Secondary Angle', role: 'secondary' });
 
-      // Title Text
       const title = new fabric.Textbox('GAME DAY', {
-        fontFamily: 'Teko', fontSize: 200, fill: '#ffffff',
-        left: 50, top: 50, fontWeight: 'bold', fontStyle: 'italic',
+        fontFamily: 'Teko', fontSize: 200 * Math.min(sx, sy), fill: '#ffffff',
+        left: 50 * sx, top: 50 * sy, fontWeight: 'bold', fontStyle: 'italic',
         shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.5)', blur: 10, offsetX: 5, offsetY: 5 })
       });
       addObj(title, { name: 'Main Title', role: 'text' });
 
-      // Subtitle Text
       const subtitle = new fabric.Textbox('FRIDAY NIGHT LIGHTS', {
-        fontFamily: 'Inter', fontSize: 40, fill: defaultColors.accent,
-        left: 55, top: 250, fontWeight: 'bold', charSpacing: 100
+        fontFamily: 'Inter', fontSize: 40 * Math.min(sx, sy), fill: defaultColors.accent,
+        left: 55 * sx, top: 250 * sy, fontWeight: 'bold', charSpacing: 100
       });
       addObj(subtitle, { name: 'Subtitle', role: 'accent' });
 
-      // Team vs Team
       const vsBox = new fabric.Rect({
-        width: 800, height: 150, fill: defaultColors.secondary,
-        left: 140, top: 850, rx: 10, ry: 10
+        width: 800 * sx, height: 150 * sy, fill: defaultColors.secondary,
+        left: 140 * sx, top: 850 * sy, rx: 10, ry: 10
       });
       addObj(vsBox, { name: 'Matchup Box', role: 'secondary' });
 
       const vsText = new fabric.Textbox('HOME TEAM   VS   AWAY TEAM', {
-        fontFamily: 'Teko', fontSize: 80, fill: '#ffffff',
-        left: 540, top: 925, originX: 'center', originY: 'center'
+        fontFamily: 'Teko', fontSize: 80 * Math.min(sx, sy), fill: '#ffffff',
+        left: 540 * sx, top: 925 * sy, originX: 'center', originY: 'center'
       });
       addObj(vsText, { name: 'Matchup Text', role: 'text' });
 
       break;
 
     case 'Score Announcement':
-      const scoreBg = new fabric.Rect({ width: 1080, height: 1080, fill: defaultColors.secondary });
+      const scoreBg = new fabric.Rect({ width: dims.width, height: dims.height, fill: defaultColors.secondary });
       addObj(scoreBg, { name: 'Background', role: 'secondary', locked: true });
 
-      const centerStripe = new fabric.Rect({ width: 1080, height: 300, fill: defaultColors.primary, top: 390 });
+      const centerStripe = new fabric.Rect({ width: dims.width, height: 300 * sy, fill: defaultColors.primary, top: 390 * sy });
       addObj(centerStripe, { name: 'Center Stripe', role: 'primary' });
 
       const finalScoreLabel = new fabric.Textbox('FINAL SCORE', {
-        fontFamily: 'Inter', fontSize: 40, fill: defaultColors.accent,
-        left: 540, top: 300, originX: 'center', fontWeight: 'bold', charSpacing: 200
+        fontFamily: 'Inter', fontSize: 40 * Math.min(sx, sy), fill: defaultColors.accent,
+        left: dims.width / 2, top: 300 * sy, originX: 'center', fontWeight: 'bold', charSpacing: 200
       });
       addObj(finalScoreLabel, { name: 'Label', role: 'accent' });
 
       const team1Score = new fabric.Textbox('42', {
-        fontFamily: 'Teko', fontSize: 250, fill: '#ffffff',
-        left: 270, top: 540, originX: 'center', originY: 'center', fontWeight: 'bold'
+        fontFamily: 'Teko', fontSize: 250 * Math.min(sx, sy), fill: '#ffffff',
+        left: dims.width * 0.25, top: 540 * sy, originX: 'center', originY: 'center', fontWeight: 'bold'
       });
       addObj(team1Score, { name: 'Home Score', role: 'text' });
 
       const team2Score = new fabric.Textbox('24', {
-        fontFamily: 'Teko', fontSize: 250, fill: '#ffffff',
-        left: 810, top: 540, originX: 'center', originY: 'center', fontWeight: 'bold'
+        fontFamily: 'Teko', fontSize: 250 * Math.min(sx, sy), fill: '#ffffff',
+        left: dims.width * 0.75, top: 540 * sy, originX: 'center', originY: 'center', fontWeight: 'bold'
       });
       addObj(team2Score, { name: 'Away Score', role: 'text' });
       
       const dash = new fabric.Textbox('-', {
-        fontFamily: 'Teko', fontSize: 200, fill: defaultColors.accent,
-        left: 540, top: 520, originX: 'center', originY: 'center', fontWeight: 'bold'
+        fontFamily: 'Teko', fontSize: 200 * Math.min(sx, sy), fill: defaultColors.accent,
+        left: dims.width / 2, top: 520 * sy, originX: 'center', originY: 'center', fontWeight: 'bold'
       });
       addObj(dash, { name: 'Divider', role: 'accent' });
 
       break;
       
     case 'Player Spotlight':
-      const spotBg = new fabric.Rect({ width: 1080, height: 1080, fill: '#111' });
+      const spotBg = new fabric.Rect({ width: dims.width, height: dims.height, fill: '#111' });
       addObj(spotBg, { name: 'Background', role: 'background', locked: true });
       
       const statBox = new fabric.Rect({
-        width: 400, height: 1080, fill: defaultColors.primary, left: 680, top: 0
+        width: 400 * sx, height: dims.height, fill: defaultColors.primary, left: 680 * sx, top: 0
       });
       addObj(statBox, { name: 'Stat Panel', role: 'primary' });
       
       const playerName = new fabric.Textbox('JOHN\nDOE', {
-        fontFamily: 'Teko', fontSize: 180, fill: '#ffffff',
-        left: 50, top: 50, fontWeight: 'bold', lineHeight: 0.8
+        fontFamily: 'Teko', fontSize: 180 * Math.min(sx, sy), fill: '#ffffff',
+        left: 50 * sx, top: 50 * sy, fontWeight: 'bold', lineHeight: 0.8
       });
       addObj(playerName, { name: 'Player Name', role: 'text' });
       
       const number = new fabric.Textbox('#10', {
-        fontFamily: 'Teko', fontSize: 400, fill: defaultColors.secondary, opacity: 0.5,
-        left: 20, top: 600, fontWeight: 'bold'
+        fontFamily: 'Teko', fontSize: 400 * Math.min(sx, sy), fill: defaultColors.secondary, opacity: 0.5,
+        left: 20 * sx, top: 600 * sy, fontWeight: 'bold'
       });
       addObj(number, { name: 'Jersey Number', role: 'secondary' });
       
       const stat1 = new fabric.Textbox('POINTS\n24', {
-        fontFamily: 'Teko', fontSize: 80, fill: '#ffffff', left: 720, top: 200, textAlign: 'center'
+        fontFamily: 'Teko', fontSize: 80 * Math.min(sx, sy), fill: '#ffffff', left: 720 * sx, top: 200 * sy, textAlign: 'center'
       });
       addObj(stat1, { name: 'Stat 1', role: 'text' });
       break;
@@ -175,16 +175,15 @@ export const applyTemplate = async (
     }
 
     default:
-      // Blank canvas
-      const blankBg = new fabric.Rect({ width: 1080, height: 1080, fill: '#1e293b' });
+      const blankBg = new fabric.Rect({ width: dims.width, height: dims.height, fill: '#1e293b' });
       addObj(blankBg, { name: 'Background', role: 'background' });
       break;
   }
 
   const isLandscape = templateName === 'Branded Landscape';
-  const logoCenterX = isLandscape ? dims.width / 2 : 540;
-  const logoCenterY = isLandscape ? dims.height / 2 : 100;
-  const logoSize = isLandscape ? 400 : 200;
+  const logoCenterX = isLandscape ? dims.width / 2 : dims.width / 2;
+  const logoCenterY = isLandscape ? dims.height / 2 : 100 * sy;
+  const logoSize = isLandscape ? 400 : 200 * Math.min(sx, sy);
 
   const addLandscapeTexture = () => {
     const textureOverlay = new fabric.Rect({

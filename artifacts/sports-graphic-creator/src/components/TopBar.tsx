@@ -4,6 +4,7 @@ import { Download, RefreshCcw, Wand2, Settings, ZoomIn, ZoomOut, LayoutTemplate 
 import { BrandSettings } from './BrandSettings';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useToast } from '@/hooks/use-toast';
+import { FormatSelector, CanvasFormat } from './FormatSelector';
 
 interface BrandData {
   primaryColor: string;
@@ -21,6 +22,8 @@ interface TopBarProps {
   setZoom: (z: number) => void;
   onLoadTemplate: (name: string) => void;
   currentBrand: BrandData;
+  canvasFormat: CanvasFormat;
+  onFormatChange: (format: CanvasFormat) => void;
 }
 
 function BrandPaletteDots({ brand }: { brand: BrandData }) {
@@ -33,7 +36,7 @@ function BrandPaletteDots({ brand }: { brand: BrandData }) {
   );
 }
 
-export function TopBar({ onExport, onAutoBrand, onSwitchStyle, zoom, setZoom, onLoadTemplate, currentBrand }: TopBarProps) {
+export function TopBar({ onExport, onAutoBrand, onSwitchStyle, zoom, setZoom, onLoadTemplate, currentBrand, canvasFormat, onFormatChange }: TopBarProps) {
   const [brandOpen, setBrandOpen] = useState(false);
   const [isApplying, setIsApplying] = useState(false);
   const { toast } = useToast();
@@ -133,6 +136,7 @@ export function TopBar({ onExport, onAutoBrand, onSwitchStyle, zoom, setZoom, on
           <Wand2 className={`h-4 w-4 mr-2 ${isApplying ? 'animate-spin' : ''}`} /> {isApplying ? 'Applying...' : 'Auto-Brand'}
         </Button>
         <div className="h-6 w-px bg-border mx-2"></div>
+        <FormatSelector currentFormat={canvasFormat} onFormatChange={onFormatChange} />
         <Button variant="default" size="sm" onClick={onExport} className="bg-white text-black hover:bg-gray-200 shadow-[0_0_15px_rgba(255,255,255,0.2)]">
           <Download className="h-4 w-4 mr-2" /> Export
         </Button>
