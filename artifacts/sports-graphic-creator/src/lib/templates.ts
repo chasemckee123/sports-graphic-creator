@@ -24,6 +24,7 @@ export const templateDimensions: Record<string, { width: number; height: number 
   'Recruitment Graphic': { width: 1080, height: 1080 },
   'Blank Canvas': { width: 1080, height: 1080 },
   'Branded Landscape': { width: 1920, height: 1080 },
+  'Athlete of the Week': { width: 1920, height: 1080 },
 };
 
 export interface TemplateInfo {
@@ -45,6 +46,7 @@ export const templateLibrary: TemplateInfo[] = [
   { name: 'Player Spotlight', category: 'Player Features', description: 'Individual player feature with stats', colors: ['#1d4ed8', '#1e293b', '#facc15'], layout: 'side-panel' },
   { name: 'Senior Night', category: 'Player Features', description: 'Senior class celebration', colors: ['#b91c1c', '#1c1917', '#fde68a'], layout: 'elegant-frame' },
   { name: 'Stat Leader Board', category: 'Player Features', description: 'Top performers stat comparison', colors: ['#0ea5e9', '#020617', '#e0f2fe'], layout: 'leaderboard' },
+  { name: 'Athlete of the Week', category: 'Player Features', description: 'Athlete of the week recognition with curved panel', colors: ['#2dd4bf', '#0a0a0a', '#ffffff'], layout: 'curved-split' },
   { name: 'Season Schedule', category: 'Schedule & Events', description: 'Full season game schedule', colors: ['#1e40af', '#0f172a', '#dbeafe'], layout: 'schedule-list' },
   { name: 'Practice Update', category: 'Schedule & Events', description: 'Practice info and announcements', colors: ['#16a34a', '#14532d', '#bbf7d0'], layout: 'info-card' },
   { name: 'Team Roster Reveal', category: 'Announcements', description: 'Roster lineup reveal graphic', colors: ['#7c3aed', '#1e1b4b', '#ede9fe'], layout: 'roster-grid' },
@@ -1606,6 +1608,130 @@ export const applyTemplate = async (
       break;
     }
 
+    case 'Athlete of the Week': {
+      const aotw = { w: 1920, h: 1080 };
+
+      const aotwBg = new fabric.Rect({
+        width: aotw.w, height: aotw.h, fill: '#0a0a0a', selectable: false
+      });
+      addObj(aotwBg, { name: 'Background', role: 'background', locked: true });
+
+      const photoArea = new fabric.Rect({
+        width: 750, height: 900, fill: '#111111',
+        left: 80, top: 90, rx: 12, ry: 12
+      });
+      addObj(photoArea, { name: 'Photo Area', role: 'secondary' });
+
+      const photoLabel = new fabric.Textbox('PLAYER\nPHOTO', {
+        fontFamily: 'Inter', fontSize: 40, fill: '#333333',
+        width: 400, left: 455, top: 540, originX: 'center', originY: 'center',
+        textAlign: 'center', fontWeight: 'bold'
+      });
+      addObj(photoLabel, { name: 'Photo Label', role: 'none' });
+
+      const curvePathData =
+        'M 820 0 ' +
+        'C 680 270, 650 540, 720 810 ' +
+        'C 760 920, 780 1000, 700 1080 ' +
+        'L 1920 1080 ' +
+        'L 1920 0 ' +
+        'Z';
+      const curvedPanel = new fabric.Path(curvePathData, {
+        fill: '#ffffff',
+        selectable: false
+      });
+      addObj(curvedPanel, { name: 'White Panel', role: 'accent', locked: true });
+
+      const curveBezier = (t: number) => {
+        if (t <= 0.75) {
+          const u = t / 0.75;
+          const mt = 1 - u;
+          const x = mt * mt * mt * 820 + 3 * mt * mt * u * 680 + 3 * mt * u * u * 650 + u * u * u * 720;
+          const y = mt * mt * mt * 0 + 3 * mt * mt * u * 270 + 3 * mt * u * u * 540 + u * u * u * 810;
+          return { x, y };
+        } else {
+          const u = (t - 0.75) / 0.25;
+          const mt = 1 - u;
+          const x = mt * mt * mt * 720 + 3 * mt * mt * u * 760 + 3 * mt * u * u * 780 + u * u * u * 700;
+          const y = mt * mt * mt * 810 + 3 * mt * mt * u * 920 + 3 * mt * u * u * 1000 + u * u * u * 1080;
+          return { x, y };
+        }
+      };
+
+      const dotCount = 55;
+      for (let i = 0; i <= dotCount; i++) {
+        const t = i / dotCount;
+        const pt = curveBezier(t);
+        const dot = new fabric.Circle({
+          radius: 4, fill: '#ffffff', opacity: 0.45,
+          left: pt.x - 15, top: pt.y, originX: 'center', originY: 'center'
+        });
+        addObj(dot, { name: `Curve Dot ${i}`, role: 'none', locked: true });
+      }
+
+      const logoBadge = new fabric.Circle({
+        radius: 48, fill: '#ffffff',
+        left: 85, top: 85, originX: 'center', originY: 'center',
+        shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.3)', blur: 10 })
+      });
+      addObj(logoBadge, { name: 'Logo Badge', role: 'accent' });
+
+      const aotwLabel1 = new fabric.Textbox('ATHLETE OF THE', {
+        fontFamily: 'Teko', fontSize: 58, fill: '#1a1a1a',
+        width: 700, left: 1130, top: 220,
+        fontWeight: 'bold', charSpacing: 120
+      });
+      addObj(aotwLabel1, { name: 'Title Line 1', role: 'text' });
+
+      const aotwLabel2 = new fabric.Textbox('WEEK', {
+        fontFamily: 'Teko', fontSize: 180, fill: '#1a1a1a',
+        width: 700, left: 1130, top: 260,
+        fontWeight: 'bold', lineHeight: 0.9
+      });
+      addObj(aotwLabel2, { name: 'Title Line 2', role: 'text' });
+
+      const nameBarWidth = 620;
+      const nameBarHeight = 70;
+      const nameBarLeft = 1130;
+      const nameBarTop = 520;
+
+      const nameBar = new fabric.Rect({
+        width: nameBarWidth, height: nameBarHeight,
+        fill: colors.primary,
+        left: nameBarLeft, top: nameBarTop,
+        rx: 4, ry: 4
+      });
+      addObj(nameBar, { name: 'Name Bar', role: 'primary' });
+
+      const playerName = new fabric.Textbox('RILEY JEAN SULLIVAN', {
+        fontFamily: 'Teko', fontSize: 42, fill: '#ffffff',
+        width: nameBarWidth - 30, left: nameBarLeft + 15, top: nameBarTop + 12,
+        fontWeight: 'bold', charSpacing: 80
+      });
+      addObj(playerName, { name: 'Player Name', role: 'text' });
+
+      const statsLine = new fabric.Textbox('5 GOALS  |  7 ASSISTS', {
+        fontFamily: 'Inter', fontSize: 28, fill: '#444444',
+        width: 500, left: 1130, top: 630,
+        fontWeight: 'bold', charSpacing: 60
+      });
+      addObj(statsLine, { name: 'Stats', role: 'text' });
+
+      const schoolName = new fabric.Textbox('SOUTH MERIST ACADEMY', {
+        fontFamily: 'Inter', fontSize: 20, fill: '#888888',
+        width: 500, left: 1130, top: 900,
+        fontWeight: 'bold', charSpacing: 200
+      });
+      addObj(schoolName, { name: 'School Name', role: 'text' });
+
+      addObj(new fabric.Rect({
+        width: 60, height: 3, fill: '#cccccc',
+        left: 1130, top: 880
+      }), { name: 'School Divider', role: 'none', locked: true });
+
+      break;
+    }
+
     case 'Blank Canvas': {
       const blankBg = new fabric.Rect({ width: 1080, height: 1080, fill: '#1e293b', selectable: false });
       addObj(blankBg, { name: 'Background', role: 'background', locked: true });
@@ -1629,9 +1755,10 @@ export const applyTemplate = async (
   }
 
   const isLandscape = templateName === 'Branded Landscape';
-  const logoCenterX = dims.width / 2;
-  const logoCenterY = isLandscape ? dims.height / 2 : 100 * sy;
-  const logoSize = isLandscape ? 400 : 200 * Math.min(sx, sy);
+  const isAOTW = templateName === 'Athlete of the Week';
+  const logoCenterX = isAOTW ? 85 : dims.width / 2;
+  const logoCenterY = isAOTW ? 85 : isLandscape ? dims.height / 2 : 100 * sy;
+  const logoSize = isAOTW ? 70 : isLandscape ? 400 : 200 * Math.min(sx, sy);
 
   const addLandscapeTexture = () => {
     const textureOverlay = new fabric.Rect({
